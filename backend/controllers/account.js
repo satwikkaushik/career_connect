@@ -1,5 +1,14 @@
-import { createStudent, loginStudent } from "../services/authStudent.js";
-import { createUni, loginUni } from "../services/authUni.js";
+import {
+  createStudent,
+  loginStudent,
+  generateAuthTokenStudent,
+} from "../services/authStudent.js";
+
+import {
+  createUni,
+  loginUni,
+  generateAuthTokenUni,
+} from "../services/authUni.js";
 
 export async function getStudent(req, res) {
   const { email, password } = req.body;
@@ -10,6 +19,10 @@ export async function getStudent(req, res) {
 
   try {
     const student = await loginStudent({ email: email, password: password });
+    const token = await generateAuthTokenStudent(student);
+
+    res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
+
     return res
       .status(200)
       .end(`Student Logged In!, UniRollNo: ${student.uniRollNo}`);
@@ -61,6 +74,10 @@ export async function getUni(req, res) {
 
   try {
     const uniUser = await loginUni({ email: email, password: password });
+    const token = await generateAuthTokenUni(uniUser);
+
+    res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
+
     return res
       .status(200)
       .end(`University User Logged In!, EmployeeId: ${uniUser.employeeId}`);

@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
 import { University } from "../models/university.js";
+import jwt from "jsonwebtoken";
+import "dotenv/config";
 
 export async function createUni(details) {
   try {
@@ -39,4 +41,25 @@ export async function loginUni(details) {
   } catch (error) {
     return Promise.reject(error.message);
   }
+}
+
+export async function generateAuthTokenUni(uniUser) {
+  if (!uniUser) {
+    return Promise.reject("Invalid Credentials");
+  }
+
+  const payload = {
+    _id: uniUser._id,
+    employeeId: uniUser.employeeId,
+    name: uniUser.name,
+    email: uniUser.email,
+    department: uniUser.department,
+    designation: uniUser.designation,
+    role: "uni",
+  };
+
+  const secret = process.env.JWT_SECRET;
+
+  const token = jwt.sign(payload, secret);
+  return token;
 }
