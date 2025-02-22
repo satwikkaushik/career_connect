@@ -9,7 +9,7 @@ function Customroute() {
             <>
                   <Routes>
                         <Route path="/student-dashboard" element={<HomePage></HomePage>}></Route>
-                        <Route path="/login" element={<LogIn></LogIn>}></Route>
+                        <Route path="/" element={<LogIn></LogIn>}></Route>
                         <Route path="/applied-jobs" element={<AppliedJobs></AppliedJobs>}></Route>
                         <Route path="/missed-jobs" element={<MissedJobs></MissedJobs>}></Route>
                         <Route path="/profile" element={<ProfilePage></ProfilePage>}></Route>

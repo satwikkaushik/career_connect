@@ -24,12 +24,14 @@ const JobCard = ({ job,x }) => {
 
       {/* Apply Button with Hover Glow Effect */}
       <motion.button
-        whileHover={{ scale: 1.1, boxShadow: "0px 0px 10px #00A6FB" }}
-        transition={{ type: "spring", stiffness: 300 }}
-        className="btn btn-primary w-full mt-3"
-      >
-        Apply Now
-      </motion.button>
+  whileHover={x !== 1 ? { scale: 1.1, boxShadow: "0px 0px 10px #00A6FB" } : {}}
+  transition={{ type: "spring", stiffness: 300 }}
+  className={`btn btn-primary w-full mt-3 ${x === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+  disabled={x === 1}
+>
+  Apply Now
+</motion.button>
+
     </motion.div>
   );
 };
