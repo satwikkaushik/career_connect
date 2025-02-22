@@ -4,6 +4,7 @@ import  LogIn  from "../components/Login.jsx";
 import AppliedJobs from "../components/appliedJobs.jsx";
 import MissedJobs from "../components/missedJob.jsx";
 import ProfilePage from "../components/profile.jsx";
+import JobDetail from "../components/jobDetail.jsx";
 function Customroute() {
       return (
             <>
@@ -13,6 +14,7 @@ function Customroute() {
                         <Route path="/applied-jobs" element={<AppliedJobs></AppliedJobs>}></Route>
                         <Route path="/missed-jobs" element={<MissedJobs></MissedJobs>}></Route>
                         <Route path="/profile" element={<ProfilePage></ProfilePage>}></Route>
+                        <Route path="/job/id" element={<JobDetail></JobDetail>}></Route>
                   </Routes>
             </>
       );

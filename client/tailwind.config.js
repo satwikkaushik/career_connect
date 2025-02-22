@@ -8,6 +8,10 @@ export const theme = {
       deepBlue: "#003554",
       brightBlue: "#0582CA",
       red: "#FF3333",
+      gray: "#F5F5F5",
+    },
+    fontFamily: {
+      montserrat: ["Montserrat", "sans-serif"], // Added Montserrat font
     },
   },
 };
