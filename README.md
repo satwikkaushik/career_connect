@@ -4,32 +4,32 @@ A comprehensive job portal system built for universities to manage job postings,
 ### Features
 #### For University Authorities
 
-Post and manage job listings with detailed information
-Track student applications across different streams
-Generate visual analytics of student performance
-Access automated summary reports of student engagement
-Manage authentication for admin accounts
+1. Post and manage job listings with detailed information
+2. Track student applications across different streams
+3. Generate visual analytics of student performance
+4. Access automated summary reports of student engagement
+5. Manage authentication for admin accounts
 
 #### For Students
 
-Access job listings with their university email ID
-Track application status and history
-Access job-specific study resources
-View missed opportunities (expired jobs)
-Update application status and outcomes
+1. Access job listings with their university email ID
+2. Track application status and history
+3. Access job-specific study resources
+4. View missed opportunities (expired jobs)
+5. Update application status and outcomes
 
 #### AI & Automation Features
 
-Automatic job description summarization
-Intelligent tag extraction from job descriptions
-Automated extraction of key job details (salary, duration, location)
-Web scraping capabilities for job details from original postings
-Automated analytics generation for university authorities
+1. Automatic job description summarization
+2. Intelligent tag extraction from job descriptions
+3. Automated extraction of key job details (salary, duration, location)
+4. Web scraping capabilities for job details from original postings
+5. Automated analytics generation for university authorities
 
 #### Security Features
 
-University email domain-restricted registration
-Role-based access control
-Screenshot prevention across the platform
-Secure authentication and authorization
+1. University email domain-restricted registration
+2. Role-based access control
+3. Screenshot prevention across the platform
+4. Secure authentication and authorization
 
