@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from "body-parser";
 import { router as homeRoute } from "./routes/home.js";
 import { router as studentRoute } from "./routes/student.js";
 import { router as uniRoute } from "./routes/uni.js";

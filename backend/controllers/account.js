@@ -1,20 +1,25 @@
-import { createStudent } from "../services/createStudent.js";
+import { createStudent, loginStudent } from "../services/authStudent.js";
 
 export async function getStudent(req, res) {
-  return res.end("Student Login");
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).end("Missing required fields");
+  }
+
+  try {
+    const student = await loginStudent({ email: email, password: password });
+    return res
+      .status(200)
+      .end(`Student Logged In!, UniRollNo: ${student.uniRollNo}`);
+  } catch (error) {
+    return res.status(401).end(error);
+  }
 }
 
 export async function postStudent(req, res) {
-  const {
-    uniRollNo,
-    name,
-    email,
-    password,
-    password_salt,
-    course,
-    branch,
-    semester,
-  } = req.body;
+  const { uniRollNo, name, email, password, course, branch, semester } =
+    req.body;
 
   if (
     !uniRollNo ||
@@ -34,7 +39,6 @@ export async function postStudent(req, res) {
       name,
       email,
       password,
-      password_salt,
       course,
       branch,
       semester,
