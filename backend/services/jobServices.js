@@ -32,3 +32,12 @@ export async function fetchExpiredJobs() {
     return Promise.reject(error.message);
   }
 }
+
+export async function createJob(details) {
+  try {
+    const job = await Job.create(details);
+    return Promise.resolve(job);
+  } catch (error) {
+    return Promise.reject(error.message);
+  }
+}
