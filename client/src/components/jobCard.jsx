@@ -44,7 +44,7 @@ const JobCard = ({ job, x }) => {
                         transition={{ type: "spring", stiffness: 300 }}
                         className={`btn btn-primary w-full mt-3`}
                         onClick={() => navigate(`/job/id`)}
-                        disabled={x==1}
+                        disabled={x == 1}
                   >
                         Apply Now
                   </motion.button>
