@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-const JobCard = ({ job, x }) => {
+const JobCard = ({ job, x, y }) => {
       const navigate = useNavigate();
       console.log(x);
       return (
@@ -35,8 +35,8 @@ const JobCard = ({ job, x }) => {
                         {job.description}
                   </p>
 
-                  {/* Apply Button with Hover Glow Effect */}
-                  <motion.button
+                  {y == 1 ? (
+                        <motion.button
                         whileHover={{
                               scale: 1.1,
                               boxShadow: "0px 0px 10px #00A6FB",
@@ -46,8 +46,22 @@ const JobCard = ({ job, x }) => {
                         onClick={() => navigate(`/job/id`)}
                         disabled={x == 1}
                   >
-                        Apply Now
+                        View Details
                   </motion.button>
+                  ) : (
+                        <motion.button
+                              whileHover={{
+                                    scale: 1.1,
+                                    boxShadow: "0px 0px 10px #00A6FB",
+                              }}
+                              transition={{ type: "spring", stiffness: 300 }}
+                              className={`btn btn-primary w-full mt-3`}
+                              onClick={() => navigate(`/job/id`)}
+                              disabled={x == 1}
+                        >
+                              Apply Now
+                        </motion.button>
+                  )}
             </motion.div>
       );
 };

@@ -1,5 +1,5 @@
-import JobCard from "./jobCard";
-import Navbar from "../components/navbar.jsx";
+import JobCard from "../jobCard.jsx";
+import Navbar from "../navbar.jsx";
 
 const jobData = [
       {

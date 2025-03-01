@@ -1,7 +1,6 @@
 import "daisyui/dist/full.css";
 import JobCard from "./jobCard";
 import Navbar from "../components/navbar.jsx";
-import { Dashboard } from "@mui/icons-material";
 
 const jobs = [
     {

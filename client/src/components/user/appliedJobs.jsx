@@ -1,5 +1,5 @@
-import JobCard from "./jobCard";
-import Navbar from "../components/navbar.jsx";
+import JobCard from "../jobCard";
+import Navbar from "../navbar";
 
 const jobData = [
       {
@@ -38,7 +38,7 @@ const AppliedJobs = () => {
                   <div className="flex justify-center bg-[#051923] p-10">
                         <div className="w-full max-w-2xl space-y-10">
                               {jobData.map((job) => (
-                                    <JobCard key={job.id} job={job} x={0} />
+                                    <JobCard key={job.id} job={job} x={0} y={1} />
                               ))}
                         </div>
                   </div>
