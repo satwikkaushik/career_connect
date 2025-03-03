@@ -13,6 +13,15 @@ export async function fetchJobs(user) {
   }
 }
 
+export async function fetchAllJobs() {
+  try {
+    const jobs = await Job.find({});
+    return Promise.resolve(jobs);
+  } catch (error) {
+    return Promise.reject(error.message);
+  }
+}
+
 export async function fetchJobById(id) {
   try {
     const job = await Job.findById(id);
@@ -33,9 +42,26 @@ export async function fetchExpiredJobs() {
   }
 }
 
-export async function createJob(details) {
+export async function createNewJob(details) {
   try {
     const job = await Job.create(details);
+    return Promise.resolve(job);
+  } catch (error) {
+    return Promise.reject(error.message);
+  }
+}
+
+export async function updateJobById(id, details) {
+  try {
+    const job = await Job.findByIdAndUpdate(
+      id,
+      {
+        $set: details,
+      },
+      {
+        new: true,
+      }
+    );
     return Promise.resolve(job);
   } catch (error) {
     return Promise.reject(error.message);
