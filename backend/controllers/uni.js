@@ -79,6 +79,7 @@ export async function setNewJob(req, res) {
 
     return res.status(201).json(job);
   } catch (error) {
+    console.log(error);
     return res.status(400).json({ message: error.message });
   }
 }
@@ -143,12 +144,4 @@ export async function setJobByID(req, res) {
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
-}
-
-export async function getAnalytics(req, res) {
-  return res.end("Analytics!");
-}
-
-export async function getAnalyticsByJobID(req, res) {
-  return res.end(`Analytics for Job ID: ${req.params.id}`);
 }

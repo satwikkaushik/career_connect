@@ -28,17 +28,3 @@ router.get("/jobs/:id", (req, res) => {
 router.post("/jobs/:id", (req, res) => {
   return setJobByID(req, res);
 });
-// below are unimplemented
-/*
-router.get("/", (req, res) => {
-  return landing(req, res);
-});
-
-router.get("/analytics", (req, res) => {
-  return getAnalytics(req, res);
-});
-
-router.get("/analytics/:id", (req, res) => {
-  return getAnalyticsByJobID(req, res);
-});
-*/

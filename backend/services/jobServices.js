@@ -1,4 +1,5 @@
 import { Job } from "../models/job.js";
+import { createNewAnalytics } from "./analyticsServices.js";
 
 export async function fetchJobs(user) {
   try {
@@ -45,6 +46,8 @@ export async function fetchExpiredJobs() {
 export async function createNewJob(details) {
   try {
     const job = await Job.create(details);
+    await createNewAnalytics(job._id);
+
     return Promise.resolve(job);
   } catch (error) {
     return Promise.reject(error.message);
