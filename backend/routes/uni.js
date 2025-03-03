@@ -8,24 +8,27 @@ import {
   setNewJobForm,
   getAnalytics,
   getAnalyticsByJobID,
+  createJob,
 } from "../controllers/uni.js";
+
+import { isAuthorizedAsUni } from "../middlewares/isAuthorized.js";
 
 export const router = express.Router();
 
+router.use(isAuthorizedAsUni);
+
+// implemented this function
+router.post("/jobs/new", (req, res) => {
+  return createJob(req, res);
+});
+
+// below are unimplemented
 router.get("/", (req, res) => {
   return landing(req, res);
 });
 
 router.get("/jobs", (req, res) => {
   return getJobs(req, res);
-});
-
-router.get("/jobs/new", (req, res) => {
-  return createJobForm(req, res);
-});
-
-router.post("/jobs/new", (req, res) => {
-  return createJob(req, res);
 });
 
 router.get("/jobs/:id", (req, res) => {
