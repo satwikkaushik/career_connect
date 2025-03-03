@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
+import { University } from "../models/university.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { Student } from "../models/student.js";
 
-export async function createStudent(details) {
+export async function createUni(details) {
   try {
     // hashing the password
     const salt = await bcrypt.genSalt(10);
@@ -11,52 +11,51 @@ export async function createStudent(details) {
 
     details.password = hashedPassword;
 
-    await Student.create(details);
-    return Promise.resolve();
+    await University.create(details);
+    return Promise.resolve("University User Register");
   } catch (error) {
     return Promise.reject(error);
   }
 }
 
-export async function loginStudent(details) {
+export async function loginUni(details) {
   try {
-    const student = await Student.findOne({
+    const uniUser = await University.findOne({
       email: details.email,
     });
 
-    if (!student) {
+    if (!uniUser) {
       return Promise.reject("Invalid Credentials");
     }
 
     const isPasswordCorrect = await bcrypt.compare(
       details.password,
-      student.password
+      uniUser.password
     );
 
     if (!isPasswordCorrect) {
       return Promise.reject("Invalid Credentials");
     }
 
-    return Promise.resolve(student);
+    return Promise.resolve(uniUser);
   } catch (error) {
-    return Promise.reject(error);
+    return Promise.reject(error.message);
   }
 }
 
-export async function generateAuthTokenStudent(student) {
-  if (!student) {
+export async function generateAuthTokenUni(uniUser) {
+  if (!uniUser) {
     return Promise.reject("Invalid Credentials");
   }
 
   const payload = {
-    _id: student._id,
-    uniRollNo: student.uniRollNo,
-    name: student.name,
-    email: student.email,
-    semester: student.semester,
-    branch: student.branch,
-    course: student.course,
-    role: "student",
+    _id: uniUser._id,
+    employeeId: uniUser.employeeId,
+    name: uniUser.name,
+    email: uniUser.email,
+    department: uniUser.department,
+    designation: uniUser.designation,
+    role: "uni",
   };
 
   const secret = process.env.JWT_SECRET;
