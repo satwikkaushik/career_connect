@@ -13,6 +13,7 @@ const AuthPage = () => {
       const [showPassword, setShowPassword] = useState(false);
       const [email, setEmail] = useState("");
       const [password, setPassword] = useState("");
+
       const navigate = useNavigate();
 
       const handleAuth = async () => {
@@ -123,6 +124,7 @@ const AuthPage = () => {
                                     onClick={handleAuth}
                               >
                                     Login
+
                               </Button>
                         </div>
 

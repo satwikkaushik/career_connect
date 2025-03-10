@@ -59,6 +59,7 @@ export async function postStudent(req, res) {
     });
     return res.status(200).end("Student Register");
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .end("Internal Server Error, failed to create student");

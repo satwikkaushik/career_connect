@@ -62,6 +62,7 @@ const JobCard = ({ job, missed, applied,admin }) => {
                               Apply Now
                         </motion.button>
                   )}
+
             </motion.div>
       );
 };
