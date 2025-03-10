@@ -5,6 +5,7 @@ import { router as homeRoute } from "./routes/home.js";
 import { router as studentRoute } from "./routes/student.js";
 import { router as uniRoute } from "./routes/uni.js";
 import { router as accountRoute } from "./routes/account.js";
+import { router as analyticsRoute } from "./routes/analytics.js";
 import { validateAuthToken } from "./middlewares/authCookie.js";
 import { checkAuth } from "./middlewares/checkAuth.js";
 import { connectDB } from "./config/db.js";
@@ -31,6 +32,7 @@ app.use(checkAuth);
 
 app.use("/", homeRoute);
 app.use("/account", accountRoute);
+app.use("/analytics", analyticsRoute);
 app.use("/student", studentRoute);
 app.use("/uni", uniRoute);
 

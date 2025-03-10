@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -12,6 +13,7 @@ import {
       AttachMoney,
       Verified,
       Delete,
+
 } from "@mui/icons-material";
 import { Button, Chip } from "@mui/material";
 
@@ -236,6 +238,7 @@ const JobDetail = () => {
                   </div>
             </div>
       );
+
 };
 
 export default JobDetail;

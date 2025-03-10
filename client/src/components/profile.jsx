@@ -48,6 +48,7 @@ const ProfilePage = () => {
             email: "2200000@geu.ac.in",
             role: "Admin",
             AdminID: "220000XXX",
+
       };
 
       return (
@@ -137,6 +138,7 @@ const ProfilePage = () => {
                                           {admin.AdminID}
                                     </p>
                               )}
+
                         </div>
                   </div>
             </>

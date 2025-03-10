@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+
 import UserHome from "../components/user/userHome.jsx";
 import LogIn from "../components/Login.jsx";
 import AppliedJobs from "../components/user/appliedJobs.jsx";
@@ -40,6 +41,7 @@ function Customroute() {
                         ></Route>
                         <Route
                               path="/student-dashboard/missed-jobs"
+
                               element={<MissedJobs></MissedJobs>}
                         ></Route>
                         <Route
