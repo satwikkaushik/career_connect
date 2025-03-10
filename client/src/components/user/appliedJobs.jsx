@@ -1,44 +1,26 @@
 import JobCard from "../jobCard";
-import Navbar from "../navbar";
-
-const jobData = [
-      {
-            id: 1,
-            jobTitle: "Software Engineer",
-            company: "Google",
-            role: "Frontend Developer",
-            lastDate: "March 30, 2025",
-            description:
-                  "Develop scalable UI components using React.js and Tailwind CSS.",
-      },
-      {
-            id: 2,
-            jobTitle: "Backend Developer",
-            company: "Amazon",
-            role: "Backend Engineer",
-            lastDate: "April 15, 2025",
-            description:
-                  "Work with Node.js, Express, and MongoDB to develop robust APIs.",
-      },
-      {
-            id: 3,
-            jobTitle: "Data Analyst",
-            company: "Microsoft",
-            role: "Data Scientist",
-            lastDate: "May 10, 2025",
-            description:
-                  "Analyze data trends and provide insights using Python and SQL.",
-      },
-];
+import Navbar from "./userNavbar";
+import { useSelector } from "react-redux";
 
 const AppliedJobs = () => {
+      const jobs = useSelector((state) => state.jobs.jobs); // Fetch jobs from Redux store
       return (
             <>
                   <Navbar header={"Applied Jobs"}></Navbar>
-                  <div className="flex justify-center bg-[#051923] p-10">
+                  <div className="flex justify-center bg-[#051923] p-10 h-screen">
                         <div className="w-full max-w-2xl space-y-10">
-                              {jobData.map((job) => (
-                                    <JobCard key={job.id} job={job} x={0} y={1} />
+                              {jobs.map((job) => (
+                                    !job.applied ? (
+                                          <></>
+                                    ) : (
+                                          <JobCard
+                                                key={job.id}
+                                                job={job}
+                                                user={0}
+                                                applied={job.applied}
+                                                missed={job.missed}
+                                          ></JobCard>
+                                    )
                               ))}
                         </div>
                   </div>

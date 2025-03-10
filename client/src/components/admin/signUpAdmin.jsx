@@ -1,48 +1,27 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-      Button,
-      TextField,
-      IconButton,
-      InputAdornment,
-} from "@mui/material";
+import { Button, TextField, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
-const AuthPage = () => {
+function signUpAdmin() {
       const [showPassword, setShowPassword] = useState(false);
       const [email, setEmail] = useState("");
       const [password, setPassword] = useState("");
+      const [fullName, setFullName] = useState("");
+      const [designation, setDesignation] = useState("");
+      const [adminID, setAdminID] = useState("");
+      const [department, setDepartment] = useState("");
       const navigate = useNavigate();
 
-      const handleAuth = async () => {
-            const geuEmailRegex = /^[0-9]+@geu\.ac\.in$/;
-
-            if (geuEmailRegex.test(email)) {
-                  await postData("https://x.api", { email, password });
-                  navigate("/student-dashboard");
-            } else if (email.includes("@")) {
-                  await postData("https://y.api", { email, password });
-                  navigate("/admin-dashboard");
-            } else {
-                  alert("Invalid credentials! Please enter a valid email.");
-            }
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        navigate("/admin-dashboard");
+        // Add new admin to the database
+        //...
       };
 
-      const postData = async (url, data) => {
-            try {
-                  const response = await fetch(url, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(data),
-                  });
 
-                  if (!response.ok) throw new Error("Failed to authenticate");
-                  console.log("Success:", await response.json());
-            } catch (error) {
-                  console.error("Error:", error);
-            }
-      };
 
       return (
             <div className="flex items-center justify-center min-h-screen bg-[#051923]">
@@ -53,10 +32,75 @@ const AuthPage = () => {
                         className="bg-[#003554] p-8 my-10 rounded-2xl shadow-2xl w-[400px] border border-[#00A6FB]/20 backdrop-blur-md"
                   >
                         <h2 className="text-white text-3xl font-bold text-center mb-6">
-                              Welcome Back
+                              Admin Sign Up
                         </h2>
 
                         <div className="flex flex-col gap-5">
+                              <TextField
+                                    label="Full Name"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={fullName}
+                                    onChange={(e) =>
+                                          setFullName(e.target.value)
+                                    }
+                                    InputProps={{
+                                          style: {
+                                                color: "#fff",
+                                                borderColor: "#00A6FB",
+                                          },
+                                    }}
+                                    sx={inputStyles}
+                              />
+
+                              <TextField
+                                    label="Admin ID"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={adminID}
+                                    onChange={(e) => setAdminID(e.target.value)}
+                                    InputProps={{
+                                          style: {
+                                                color: "#fff",
+                                                borderColor: "#00A6FB",
+                                          },
+                                    }}
+                                    sx={inputStyles}
+                              />
+
+                              <TextField
+                                    label="Designation"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={designation}
+                                    onChange={(e) =>
+                                          setDesignation(e.target.value)
+                                    }
+                                    InputProps={{
+                                          style: {
+                                                color: "#fff",
+                                                borderColor: "#00A6FB",
+                                          },
+                                    }}
+                                    sx={inputStyles}
+                              />
+                              <TextField
+                                    label="Department"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={department}
+                                    onChange={(e) =>
+                                          setDepartment(e.target.value)
+                                    }
+                                    InputProps={{
+                                          style: {
+                                                color: "#fff",
+                                                borderColor: "#00A6FB",
+                                          },
+                                    }}
+                                    sx={inputStyles}
+                              />
+
                               <TextField
                                     label="Email"
                                     variant="outlined"
@@ -115,30 +159,40 @@ const AuthPage = () => {
                                     }}
                                     sx={inputStyles}
                               />
-
+                              <div className="flex gap-2 mt-3">
+                                    <input
+                                          type="checkbox"
+                                          name=""
+                                          id=""
+                                          onChange={() =>
+                                                navigate("/signup-user")
+                                          }
+                                    />
+                                    <label htmlFor="">Sign up as User</label>
+                              </div>
                               <Button
                                     variant="contained"
                                     fullWidth
                                     sx={buttonStyles}
-                                    onClick={handleAuth}
+                                    onClick={handleSubmit}
                               >
-                                    Login
+                                    Sign Up
                               </Button>
                         </div>
 
                         <p className="text-gray-400 text-center mt-6">
-                              Don&apos;t have an account?
+                              Already have an account?
                               <span
-                                    onClick={() => navigate("/signup-user")}
-                                    className=" pl-1 text-[#00A6FB] font-semibold cursor-pointer hover:underline"
+                                    onClick={() => navigate("/")}
+                                    className="pl-1 text-[#00A6FB] font-semibold cursor-pointer hover:underline"
                               >
-                                    Sign Up
+                                    Login
                               </span>
                         </p>
                   </motion.div>
             </div>
       );
-};
+}
 
 // Common Styles
 const inputStyles = {
@@ -160,4 +214,4 @@ const buttonStyles = {
       "&:hover": { backgroundColor: "#0582CA" },
 };
 
-export default AuthPage;
+export default signUpAdmin;

@@ -2,7 +2,7 @@ import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const adminNavbar = ({ header }) => {
+const Navbar = ({ header }) => {
       const [menuOpen, setMenuOpen] = useState(false);
       const navigate = useNavigate();
 
@@ -49,7 +49,7 @@ const adminNavbar = ({ header }) => {
                               <li
                                     className="hover:text-primary cursor-pointer transition"
                                     onClick={() => {
-                                          navigate("/admin-dashboard");
+                                          navigate("/student-dashboard");
                                           setMenuOpen(false);
                                     }}
                               >
@@ -58,11 +58,20 @@ const adminNavbar = ({ header }) => {
                               <li
                                     className="hover:text-primary cursor-pointer transition"
                                     onClick={() => {
-                                          navigate("/admin-dashboard/analytics");
+                                          navigate("/student-dashboard/applied-jobs");
                                           setMenuOpen(false);
                                     }}
                               >
-                                    Analytics
+                                    Applied Jobs
+                              </li>
+                              <li
+                                    className="hover:text-primary cursor-pointer transition"
+                                    onClick={() => {
+                                          navigate("/student-dashboard/missed-jobs");
+                                          setMenuOpen(false);
+                                    }}
+                              >
+                                    Missed Jobs
                               </li>
                               <li
                                     className="hover:text-primary cursor-pointer transition"
@@ -108,4 +117,4 @@ const adminNavbar = ({ header }) => {
       );
 };
 
-export default adminNavbar;
+export default Navbar;

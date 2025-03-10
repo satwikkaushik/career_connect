@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-const JobCard = ({ job, x, y }) => {
+const JobCard = ({ job, missed, applied,admin }) => {
       const navigate = useNavigate();
-      console.log(x);
+
       return (
             <motion.div
                   key={job.id}
@@ -16,38 +16,38 @@ const JobCard = ({ job, x, y }) => {
                   {/* Top Indicator */}
                   <div
                         className={`absolute top-0 left-0 w-full h-1 ${
-                              x === 1 ? "bg-red" : "bg-primary"
+                              missed === true ? "bg-red" : "bg-primary"
                         }`}
                   ></div>
 
                   {/* Job Details */}
                   <h2 className="text-xl font-semibold text-primary">
-                        {job.jobTitle}
+                        {job.title}
                   </h2>
                   <p className="text-gray-300 text-lg">{job.company}</p>
                   <p className="text-sm text-brightBlue font-medium">
-                        {job.role}
+                        {job.jobType}
                   </p>
                   <p className="text-xs text-gray-400">
-                        Last Date: {job.lastDate}
+                        Last Date: {job.deadline}
                   </p>
                   <p className="text-sm mt-2 text-gray-200">
                         {job.description}
                   </p>
 
-                  {y == 1 ? (
+                  {/* Button */}
+                  {applied === true||admin ? (
                         <motion.button
-                        whileHover={{
-                              scale: 1.1,
-                              boxShadow: "0px 0px 10px #00A6FB",
-                        }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                        className={`btn btn-primary w-full mt-3`}
-                        onClick={() => navigate(`/job/id`)}
-                        disabled={x == 1}
-                  >
-                        View Details
-                  </motion.button>
+                              whileHover={{
+                                    scale: 1.1,
+                                    boxShadow: "0px 0px 10px #00A6FB",
+                              }}
+                              transition={{ type: "spring", stiffness: 300 }}
+                              className={`btn btn-primary w-full mt-3`}
+                              onClick={() => navigate(`/job/${job.id}`)}
+                        >
+                              View Details
+                        </motion.button>
                   ) : (
                         <motion.button
                               whileHover={{
@@ -56,8 +56,8 @@ const JobCard = ({ job, x, y }) => {
                               }}
                               transition={{ type: "spring", stiffness: 300 }}
                               className={`btn btn-primary w-full mt-3`}
-                              onClick={() => navigate(`/job/id`)}
-                              disabled={x == 1}
+                              onClick={() => navigate(`/job/${job.id}`)}
+                              disabled={missed === true}
                         >
                               Apply Now
                         </motion.button>
