@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, TextField, IconButton, InputAdornment, MenuItem } from "@mui/material";
+import { Button, TextField, IconButton, InputAdornment} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 function SignUpUser() {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,11 +25,18 @@ function SignUpUser() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/student-dashboard");
-    // Add new user to the database
-  };
+    
+    try {
+        const response = await axios.post("http://localhost:5000/api/register", formData);
+        console.log("User registered:", response.data);
+        navigate("/student-dashboard");
+    } catch (error) {
+        console.error("Registration failed:", error);
+        alert("Registration failed! Please try again.");
+    }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#051923]">
@@ -40,12 +48,13 @@ function SignUpUser() {
       >
         <h2 className="text-white text-3xl font-bold text-center mb-6">Create Account</h2>
 
-        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-5 text-white" onSubmit={handleSubmit}>
           <TextField
             label="Full Name"
             name="fullName"
             variant="outlined"
             fullWidth
+            className="text-white"
             value={formData.fullName}
             onChange={handleChange}
             sx={inputStyles}
@@ -202,10 +211,13 @@ const inputStyles = {
     "& fieldset": { borderColor: "#00A6FB" },
     "&:hover fieldset": { borderColor: "#0582CA" },
     "&.Mui-focused fieldset": { borderColor: "#00A6FB" },
+    "& input": { color: "#fff", backgroundColor: "#012A4A" }, // Ensures text remains white
   },
   "& label": { color: "#ccc" },
   "& label.Mui-focused": { color: "#00A6FB" },
 };
+
+
 
 const buttonStyles = {
   backgroundColor: "#00A6FB",
