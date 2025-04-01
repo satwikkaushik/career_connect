@@ -11,10 +11,10 @@ router.get("/", (req, res) => {
   return getJobs(req, res);
 });
 
-router.get("/jobs/:id", (req, res) => {
-  return getJobById(req, res);
-});
+// router.get("/jobs/:id", (req, res) => {
+//   return getJobById(req, res);
+// });
 
-router.get("/jobs/expired", (req, res) => {
-  return getExpiredJobs(req, res);
-});
+// router.get("/jobs/expired", (req, res) => {
+//   return getExpiredJobs(req, res);
+// });
