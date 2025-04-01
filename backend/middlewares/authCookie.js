@@ -19,6 +19,7 @@ async function validateToken(token) {
   const secret = process.env.JWT_SECRET;
   try {
     const data = await jwt.verify(token, secret);
+    console.log("JWT Payload: ", data);
     return Promise.resolve(data);
   } catch (error) {
     return Promise.reject(error.message);

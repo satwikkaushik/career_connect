@@ -17,9 +17,9 @@ router.get("/", isAuthorizedAsUni, (req, res) => {
   return getAllAnalytics(req, res);
 });
 
-router.get("/jobs/:id", isAuthorizedAsUni, (req, res) => {
-  return getAnalyticsByJobID(req, res);
-});
+// router.get("/jobs/:id", isAuthorizedAsUni, (req, res) => {
+//   return getAnalyticsByJobID(req, res);
+// });
 
 router.post("/studentApplied", isAuthorizedAsStudent, (req, res) => {
   return setStudentApplied(req, res);

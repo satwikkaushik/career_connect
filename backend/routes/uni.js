@@ -21,9 +21,9 @@ router.get("/jobs", (req, res) => {
   return getJobs(req, res);
 });
 
-router.get("/jobs/:id", (req, res) => {
-  return getJobByID(req, res);
-});
+// router.get("/jobs/:id", (req, res) => {
+//   return getJobByID(req, res);
+// });
 
 router.post("/jobs/:id", (req, res) => {
   return setJobByID(req, res);
