@@ -24,6 +24,7 @@
     "@shadcn/ui": "^0.0.4",
     "@tailwindcss/postcss": "^4.0.8",
     "@tailwindcss/vite": "^4.0.8",
+    "axios": "^1.8.3",
     "clsx": "^2.1.1",
     "daisyui": "^4.12.23",
     "dayjs": "^1.11.13",

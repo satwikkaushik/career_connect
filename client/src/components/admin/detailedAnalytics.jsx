@@ -96,7 +96,7 @@ export default function JobAnalytics() {
                                           <People className="text-lg mr-2" />
                                           Total Applicants:
                                     </p>
-                                    <p className="text-white">{jobAnalytics.applied || 0}</p>
+                                    <p className="text-white">{jobAnalytics.applicants || 0}</p>
                               </div>
                         </div>
                   </div>
