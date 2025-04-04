@@ -3,7 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { removeJob } from "../redux/jobSlice"; 
+import { removeJob } from "../Redux/jobSlice";
+import axios from "axios";
 import {
       ArrowBack,
       Work,
@@ -13,7 +14,6 @@ import {
       AttachMoney,
       Verified,
       Delete,
-
 } from "@mui/icons-material";
 import { Button, Chip } from "@mui/material";
 
@@ -21,11 +21,13 @@ const JobDetail = () => {
       const { id } = useParams();
       const navigate = useNavigate();
       const [isChecked, setIsChecked] = useState(false);
+      const [isLoading, setIsLoading] = useState(false);
+      const [isLoadingSelected, setIsLoadingSelected] = useState(false);
       const dispatch = useDispatch();
 
-      const editDetails = ()=>{
+      const editDetails = () => {
             navigate(`/admin-dashboard/edit-job/${id}`); // Redirect to edit job page
-      }
+      };
 
       // Access job details from Redux store
       const jobs = useSelector((state) => state.jobs.jobs); // Access nested array
@@ -43,13 +45,51 @@ const JobDetail = () => {
             );
       }
 
-      const clickChange = () => {
-            setIsChecked(!isChecked);
-            
+      const clickChange = async () => {
+            setIsLoading(true);
+            const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+            try {
+                  const response = await axios.post(
+                        `${SERVER_URL}/analytics/studentApplied`,
+                        {
+                              jobId: job.id,
+                        }
+                  );
+                  if (response.status === 200) {
+                        setIsChecked(!isChecked);
+                  }
+            } catch (error) {
+                  console.error("Error updating application status:", error);
+                  alert("Failed to update application status");
+            } finally {
+                  setIsLoading(false);
+            }
+      };
+
+      const clickChangeSelected = async () => {
+            setIsLoadingSelected(true);
+            const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+            try {
+                  const response = await axios.post(
+                        `${SERVER_URL}/analytics/studentSelected`,
+                        {
+                              jobId: job.id,
+                        }
+                  );
+                  if (response.status === 200) {
+                        // Handle successful selection
+                  }
+            } catch (error) {
+                  console.error("Error updating selection status:", error);
+                  alert("Failed to update selection status");
+            } finally {
+                  setIsLoadingSelected(false);
+            }
       };
 
       const handleDelete = () => {
             dispatch(removeJob(job.id)); // Dispatch action to remove the job
+            //logic to delete the job from the database
             navigate("/admin-dashboard"); // Redirect after deletion
       };
 
@@ -73,16 +113,20 @@ const JobDetail = () => {
                   )}
 
                   <div className="max-w-4xl relative mx-auto bg-[#003554] p-6 md:p-8 rounded-xl shadow-lg border border-[#00A6FB]/30">
-                        {(userRole==="admin")?<Button
-                              onClick={handleDelete}
-                              aria-label="delete"
-                              className="!absolute top-6 right-8 !bg-primary hover:!bg-deepBlue !w-10 !h-10 !min-w-0 rounded-full flex items-center justify-center shadow-md"
-                        >
-                              <Delete
-                                    className="text-white"
-                                    fontSize="medium"
-                              />
-                        </Button>:<></>}
+                        {userRole === "admin" ? (
+                              <Button
+                                    onClick={handleDelete}
+                                    aria-label="delete"
+                                    className="!absolute top-6 right-8 !bg-primary hover:!bg-deepBlue !w-10 !h-10 !min-w-0 rounded-full flex items-center justify-center shadow-md"
+                              >
+                                    <Delete
+                                          className="text-white"
+                                          fontSize="medium"
+                                    />
+                              </Button>
+                        ) : (
+                              <></>
+                        )}
                         <h1 className="text-2xl md:text-3xl font-bold text-[#00A6FB] flex items-center gap-2">
                               <Work /> {job.title}
                         </h1>
@@ -102,7 +146,7 @@ const JobDetail = () => {
                                           {job.jobType}
                                     </span>
                               </p>
-                              <p className="text-gray-300 flex items-center gap-2">
+                              <p className="text-gray-300 flex itemsCenter gap-2">
                                     <AttachMoney className="text-[#00A6FB]" />{" "}
                                     Salary:{" "}
                                     <span className="font-semibold">
@@ -191,20 +235,48 @@ const JobDetail = () => {
                                                       : "#0582CA",
                                           },
                                     }}
-                                    onClick={
-                                          editDetails
-                                    }
+                                    onClick={editDetails}
                               >
                                     Edit Job Details
                               </Button>
                         ) : (
                               <>
-                              <div className="flex gap-2 my-3">
-                              <input type="checkbox" name="" id="" onChange={clickChange} disabled={job.applied}/>
-                                    <p className="">
-                                          select checkbox after applying
-                                    </p>
-                              </div>
+                                    <div className="flex flex-col md:flex-row items-start sm:items-center gap-2 md:gap-56 my-3">
+                                          <label className="flex items-center gap-2">
+                                                <input
+                                                      type="checkbox"
+                                                      onChange={clickChange}
+                                                      disabled={
+                                                            job.applied ||
+                                                            isLoading
+                                                      }
+                                                      className="w-4 h-4"
+                                                />
+                                                <p className="text-sm sm:text-base">
+                                                      Select checkbox after
+                                                      applying
+                                                </p>
+                                          </label>
+
+                                          <label className="flex items-center gap-2">
+                                                <input
+                                                      type="checkbox"
+                                                      onChange={
+                                                            clickChangeSelected
+                                                      }
+                                                      className="w-4 h-4"
+                                                      disabled={
+                                                            !isChecked ||
+                                                            isLoadingSelected
+                                                      }
+                                                />
+                                                <p className="text-sm sm:text-base">
+                                                      Select checkbox if you are
+                                                      selected for this role
+                                                </p>
+                                          </label>
+                                    </div>
+
                                     <Button
                                           variant="contained"
                                           fullWidth
@@ -238,7 +310,6 @@ const JobDetail = () => {
                   </div>
             </div>
       );
-
 };
 
 export default JobDetail;

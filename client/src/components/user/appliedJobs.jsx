@@ -9,7 +9,7 @@ const AppliedJobs = () => {
                   <Navbar header={"Applied Jobs"}></Navbar>
                   <div className="flex justify-center bg-[#051923] p-10 h-screen">
                         <div className="w-full max-w-2xl space-y-10">
-                              {jobs.map((job) => (
+                              {jobs.map((job) =>
                                     !job.applied ? (
                                           <></>
                                     ) : (
@@ -21,7 +21,7 @@ const AppliedJobs = () => {
                                                 missed={job.missed}
                                           ></JobCard>
                                     )
-                              ))}
+                              )}
                         </div>
                   </div>
             </>

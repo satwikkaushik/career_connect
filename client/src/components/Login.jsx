@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-      Button,
-      TextField,
-      IconButton,
-      InputAdornment,
-} from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setUserRole } from "../Redux/jobSlice";
+import { Button, TextField, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
@@ -15,18 +12,35 @@ const AuthPage = () => {
       const [password, setPassword] = useState("");
 
       const navigate = useNavigate();
+      const dispatch = useDispatch();
 
       const handleAuth = async () => {
             const geuEmailRegex = /^[0-9]+@geu\.ac\.in$/;
+            const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
-            if (geuEmailRegex.test(email)) {
-                  await postData("https://x.api", { email, password });
-                  navigate("/student-dashboard");
-            } else if (email.includes("@")) {
-                  await postData("https://y.api", { email, password });
-                  navigate("/admin-dashboard");
-            } else {
-                  alert("Invalid credentials! Please enter a valid email.");
+            try {
+                  if (geuEmailRegex.test(email)) {
+                        await postData(`${SERVER_URL}/account/student`, {
+                              email,
+                              password,
+                        });
+                        dispatch(setUserRole("student"));
+                        navigate("/student-dashboard");
+                  } else if (email.includes("@")) {
+                        await postData(`${SERVER_URL}/account/uni`, {
+                              email,
+                              password,
+                        });
+                        dispatch(setUserRole("admin"));
+                        navigate("/admin-dashboard");
+                  } else {
+                        alert(
+                              "Invalid credentials! Please enter a valid email."
+                        );
+                  }
+            } catch (error) {
+                  console.error("Authentication failed:", error);
+                  alert("Authentication failed. Please try again.");
             }
       };
 
@@ -124,7 +138,6 @@ const AuthPage = () => {
                                     onClick={handleAuth}
                               >
                                     Login
-
                               </Button>
                         </div>
 
