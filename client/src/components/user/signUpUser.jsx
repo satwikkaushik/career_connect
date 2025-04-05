@@ -19,6 +19,8 @@ function SignUpUser() {
     semester: "",
   });
 
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -29,7 +31,7 @@ function SignUpUser() {
     e.preventDefault();
     
     try {
-        const response = await axios.post("http://localhost:5000/api/register", formData);
+        const response = await axios.post(`${SERVER_URL}/account/student`, formData);
         console.log("User registered:", response.data);
         navigate("/student-dashboard");
     } catch (error) {

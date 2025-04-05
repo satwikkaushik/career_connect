@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Button, TextField, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { motion } from "framer-motion";
+import axios from "axios";
 
-function signUpAdmin() {
+function SignUpAdmin() {
       const [showPassword, setShowPassword] = useState(false);
       const [email, setEmail] = useState("");
       const [password, setPassword] = useState("");
@@ -12,16 +13,42 @@ function signUpAdmin() {
       const [designation, setDesignation] = useState("");
       const [adminID, setAdminID] = useState("");
       const [department, setDepartment] = useState("");
+      const [loading, setLoading] = useState(false);
       const navigate = useNavigate();
+      const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        navigate("/admin-dashboard");
-        // Add new admin to the database
-        //...
+      const handleSubmit = async (e) => {
+            e.preventDefault();
+            setLoading(true);
+
+            try {
+                  const formData = {
+                        fullName,
+                        adminID,
+                        designation,
+                        department,
+                        email,
+                        password,
+                  };
+
+                  const response = await axios.post(
+                        `${SERVER_URL}/account/uni`,
+                        formData
+                  );
+
+                  if (response.status === 201) {
+                        navigate("/admin-dashboard");
+                  }
+            } catch (error) {
+                  console.error(
+                        "Signup failed:",
+                        error.response?.data || error.message
+                  );
+                  // You might want to show an error message to the user here
+            } finally {
+                  setLoading(false);
+            }
       };
-
-
 
       return (
             <div className="flex items-center justify-center min-h-screen bg-[#051923]">
@@ -175,8 +202,9 @@ function signUpAdmin() {
                                     fullWidth
                                     sx={buttonStyles}
                                     onClick={handleSubmit}
+                                    disabled={loading}
                               >
-                                    Sign Up
+                                    {loading ? "Signing Up..." : "Sign Up"}
                               </Button>
                         </div>
 
@@ -214,4 +242,4 @@ const buttonStyles = {
       "&:hover": { backgroundColor: "#0582CA" },
 };
 
-export default signUpAdmin;
+export default SignUpAdmin;

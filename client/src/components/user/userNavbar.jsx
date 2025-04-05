@@ -1,10 +1,33 @@
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Navbar = ({ header }) => {
       const [menuOpen, setMenuOpen] = useState(false);
       const navigate = useNavigate();
+      const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+
+      const handleLogout = async () => {
+            try {
+                  const response = await axios.get(
+                        `${SERVER_URL}/account/signout`,
+                        {
+                              withCredentials: true,
+                        }
+                  );
+
+                  if (response.status === 200) {
+                        navigate("/");
+                        setMenuOpen(false);
+                  }
+            } catch (error) {
+                  console.error(
+                        "Logout failed:",
+                        error.response?.data || error.message
+                  );
+            }
+      };
 
       // Close sidebar when clicking outside
       useEffect(() => {
@@ -58,7 +81,9 @@ const Navbar = ({ header }) => {
                               <li
                                     className="hover:text-primary cursor-pointer transition"
                                     onClick={() => {
-                                          navigate("/student-dashboard/applied-jobs");
+                                          navigate(
+                                                "/student-dashboard/applied-jobs"
+                                          );
                                           setMenuOpen(false);
                                     }}
                               >
@@ -67,7 +92,9 @@ const Navbar = ({ header }) => {
                               <li
                                     className="hover:text-primary cursor-pointer transition"
                                     onClick={() => {
-                                          navigate("/student-dashboard/missed-jobs");
+                                          navigate(
+                                                "/student-dashboard/missed-jobs"
+                                          );
                                           setMenuOpen(false);
                                     }}
                               >
@@ -84,11 +111,7 @@ const Navbar = ({ header }) => {
                               </li>
                               <li
                                     className="text-primary cursor-pointer transition"
-                                    onClick={() => {
-                                          // TODO: Logout logic
-                                          navigate("/");
-                                          setMenuOpen(false);
-                                    }}
+                                    onClick={handleLogout}
                               >
                                     Logout
                               </li>
