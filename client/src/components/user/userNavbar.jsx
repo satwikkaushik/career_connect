@@ -20,6 +20,7 @@ const Navbar = ({ header }) => {
                   if (response.status === 200) {
                         navigate("/");
                         setMenuOpen(false);
+                        console.log("Logout successful");
                   }
             } catch (error) {
                   console.error(
