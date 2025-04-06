@@ -13,15 +13,15 @@ router.post("/student/login", (req, res) => {
   return getStudent(req, res);
 });
 
-router.post("/student/singup", (req, res) => {
+router.post("/student/signup", (req, res) => {
   return postStudent(req, res);
 });
 
-router.get("/uni", (req, res) => {
+router.post("/uni/login", (req, res) => {
   return getUni(req, res);
 });
 
-router.post("/uni", (req, res) => {
+router.post("/uni/signup", (req, res) => {
   return postUni(req, res);
 });
 
