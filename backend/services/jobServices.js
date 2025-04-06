@@ -70,3 +70,12 @@ export async function updateJobById(id, details) {
     return Promise.reject(error.message);
   }
 }
+
+export async function deleteJobById(id) {
+  try {
+    const job = await Job.findByIdAndDelete(id);
+    return Promise.resolve(job);
+  } catch (error) {
+    return Promise.reject(error.message);
+  }
+}

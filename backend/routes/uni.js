@@ -4,6 +4,7 @@ import {
   setJobByID,
   getJobs,
   getJobByID,
+  deleteJob,
 } from "../controllers/uni.js";
 
 import { isAuthorizedAsUni } from "../middlewares/isAuthorized.js";
@@ -27,4 +28,8 @@ router.get("/jobs", (req, res) => {
 
 router.post("/jobs/:id", (req, res) => {
   return setJobByID(req, res);
+});
+
+router.post("/jobs/delete/:id", (req, res) => {
+  return deleteJob(req, res);
 });

@@ -9,7 +9,7 @@ import {
 
 export const router = express.Router();
 
-router.get("/student", (req, res) => {
+router.post("/student", (req, res) => {
   return getStudent(req, res);
 });
 
