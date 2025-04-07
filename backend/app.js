@@ -18,14 +18,21 @@ const MONGO_URI = process.env.MONGO_URI;
 const app = express();
 
 connectDB(MONGO_URI)
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.log("Error connecting to MongoDB", err);
-  });
+      .then(() => {
+            console.log("Connected to MongoDB");
+      })
+      .catch((err) => {
+            console.log("Error connecting to MongoDB", err);
+      });
 
-app.use(cors());
+app.use(
+      cors({
+            origin: process.env.FRONTEND_URL || "http://localhost:3000",
+            methods: ["GET", "POST", "PUT", "DELETE"],
+            credentials: true, // Allow cookies
+            allowedHeaders: ["Content-Type", "Authorization"],
+      })
+);
 
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -39,5 +46,5 @@ app.use("/analytics", analyticsRoute);
 app.use("/student", studentRoute);
 app.use("/uni", uniRoute);
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+      console.log(`Server is running on port ${PORT}`);
 });

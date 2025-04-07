@@ -5,13 +5,33 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import axios from "axios";
 
+// Common Styles
+const inputStyles = {
+      "& .MuiOutlinedInput-root": {
+            "& fieldset": { borderColor: "#00A6FB" },
+            "&:hover fieldset": { borderColor: "#0582CA" },
+            "&.Mui-focused fieldset": { borderColor: "#00A6FB" },
+      },
+      "& label": { color: "#ccc" },
+      "& label.Mui-focused": { color: "#00A6FB" },
+};
+
+const buttonStyles = {
+      backgroundColor: "#00A6FB",
+      padding: "12px 0",
+      fontSize: "16px",
+      fontWeight: "bold",
+      borderRadius: "10px",
+      "&:hover": { backgroundColor: "#0582CA" },
+};
+
 function SignUpAdmin() {
       const [showPassword, setShowPassword] = useState(false);
       const [email, setEmail] = useState("");
       const [password, setPassword] = useState("");
-      const [fullName, setFullName] = useState("");
+      const [name, setName] = useState("");
       const [designation, setDesignation] = useState("");
-      const [adminID, setAdminID] = useState("");
+      const [employeeID, setEmployeeID] = useState("");
       const [department, setDepartment] = useState("");
       const [loading, setLoading] = useState(false);
       const navigate = useNavigate();
@@ -19,12 +39,26 @@ function SignUpAdmin() {
 
       const handleSubmit = async (e) => {
             e.preventDefault();
+
+            // Validate all fields
+            if (
+                  !name ||
+                  !employeeID ||
+                  !designation ||
+                  !department ||
+                  !email ||
+                  !password
+            ) {
+                  alert("Please fill in all fields");
+                  return;
+            }
+
             setLoading(true);
 
             try {
                   const formData = {
-                        fullName,
-                        adminID,
+                        name,
+                        employeeId: employeeID, // Changed to match API format
                         designation,
                         department,
                         email,
@@ -32,19 +66,22 @@ function SignUpAdmin() {
                   };
 
                   const response = await axios.post(
-                        `${SERVER_URL}/account/uni`,
-                        formData
+                        `${SERVER_URL}/account/uni/signup`,
+                        formData,
+                        {
+                              headers: {
+                                    "Content-Type": "application/json",
+                              },
+                        }
                   );
 
-                  if (response.status === 201) {
+                  if (response.status === 200) {
+                        console.log("Admin registered:", response.data);
                         navigate("/admin-dashboard");
                   }
             } catch (error) {
-                  console.error(
-                        "Signup failed:",
-                        error.response?.data || error.message
-                  );
-                  // You might want to show an error message to the user here
+                  console.error("Registration failed:", error);
+                  alert("Registration failed! Please try again.");
             } finally {
                   setLoading(false);
             }
@@ -67,10 +104,8 @@ function SignUpAdmin() {
                                     label="Full Name"
                                     variant="outlined"
                                     fullWidth
-                                    value={fullName}
-                                    onChange={(e) =>
-                                          setFullName(e.target.value)
-                                    }
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
                                     InputProps={{
                                           style: {
                                                 color: "#fff",
@@ -81,11 +116,13 @@ function SignUpAdmin() {
                               />
 
                               <TextField
-                                    label="Admin ID"
+                                    label="Employee ID"
                                     variant="outlined"
                                     fullWidth
-                                    value={adminID}
-                                    onChange={(e) => setAdminID(e.target.value)}
+                                    value={employeeID}
+                                    onChange={(e) =>
+                                          setEmployeeID(e.target.value)
+                                    }
                                     InputProps={{
                                           style: {
                                                 color: "#fff",
@@ -221,25 +258,5 @@ function SignUpAdmin() {
             </div>
       );
 }
-
-// Common Styles
-const inputStyles = {
-      "& .MuiOutlinedInput-root": {
-            "& fieldset": { borderColor: "#00A6FB" },
-            "&:hover fieldset": { borderColor: "#0582CA" },
-            "&.Mui-focused fieldset": { borderColor: "#00A6FB" },
-      },
-      "& label": { color: "#ccc" },
-      "& label.Mui-focused": { color: "#00A6FB" },
-};
-
-const buttonStyles = {
-      backgroundColor: "#00A6FB",
-      padding: "12px 0",
-      fontSize: "16px",
-      fontWeight: "bold",
-      borderRadius: "10px",
-      "&:hover": { backgroundColor: "#0582CA" },
-};
 
 export default SignUpAdmin;

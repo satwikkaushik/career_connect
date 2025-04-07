@@ -5,11 +5,13 @@ import { setUserRole } from "../Redux/jobSlice";
 import { Button, TextField, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 const AuthPage = () => {
       const [showPassword, setShowPassword] = useState(false);
       const [email, setEmail] = useState("");
       const [password, setPassword] = useState("");
+      const [loading, setLoading] = useState(false);
 
       const navigate = useNavigate();
       const dispatch = useDispatch();
@@ -17,22 +19,45 @@ const AuthPage = () => {
       const handleAuth = async () => {
             const geuEmailRegex = /^[0-9]+@geu\.ac\.in$/;
             const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+            setLoading(true);
 
             try {
                   if (geuEmailRegex.test(email)) {
-                        await postData(`${SERVER_URL}/account/student`, {
-                              email,
-                              password,
-                        });
-                        dispatch(setUserRole("student"));
-                        navigate("/student-dashboard");
+                        const response = await axios.post(
+                              `${SERVER_URL}/account/student/login`,
+                              {
+                                    email,
+                                    password,
+                              },
+                              {
+                                    headers: {
+                                          "Content-Type": "application/json",
+                                    },
+                              }
+                        );
+                        if (response.status === 200) {
+                              console.log(response.data);
+                              dispatch(setUserRole("student"));
+                              navigate("/student-dashboard");
+                        }
                   } else if (email.includes("@")) {
-                        await postData(`${SERVER_URL}/account/uni`, {
-                              email,
-                              password,
-                        });
-                        dispatch(setUserRole("admin"));
-                        navigate("/admin-dashboard");
+                        const response = await axios.post(
+                              `${SERVER_URL}/account/uni/login`,
+                              {
+                                    email,
+                                    password,
+                              },
+                              {
+                                    headers: {
+                                          "Content-Type": "application/json",
+                                    },
+                              }
+                        );
+                        if (response.status === 200) {
+                              console.log(response.data);
+                              dispatch(setUserRole("admin"));
+                              navigate("/admin-dashboard");
+                        }
                   } else {
                         alert(
                               "Invalid credentials! Please enter a valid email."
@@ -41,21 +66,8 @@ const AuthPage = () => {
             } catch (error) {
                   console.error("Authentication failed:", error);
                   alert("Authentication failed. Please try again.");
-            }
-      };
-
-      const postData = async (url, data) => {
-            try {
-                  const response = await fetch(url, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(data),
-                  });
-
-                  if (!response.ok) throw new Error("Failed to authenticate");
-                  console.log("Success:", await response.json());
-            } catch (error) {
-                  console.error("Error:", error);
+            } finally {
+                  setLoading(false);
             }
       };
 
@@ -136,8 +148,9 @@ const AuthPage = () => {
                                     fullWidth
                                     sx={buttonStyles}
                                     onClick={handleAuth}
+                                    disabled={loading}
                               >
-                                    Login
+                                    {loading ? "Loading..." : "Login"}
                               </Button>
                         </div>
 
