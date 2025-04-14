@@ -6,7 +6,7 @@ const JobCard = ({ job, missed, applied,admin }) => {
 
       return (
             <motion.div
-                  key={job.id}
+                  key={job._id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
@@ -44,7 +44,7 @@ const JobCard = ({ job, missed, applied,admin }) => {
                               }}
                               transition={{ type: "spring", stiffness: 300 }}
                               className={`btn btn-primary w-full mt-3`}
-                              onClick={() => navigate(`/job/${job.id}`)}
+                              onClick={() => navigate(`/job/${job._id}`)}
                         >
                               View Details
                         </motion.button>
@@ -56,7 +56,7 @@ const JobCard = ({ job, missed, applied,admin }) => {
                               }}
                               transition={{ type: "spring", stiffness: 300 }}
                               className={`btn btn-primary w-full mt-3`}
-                              onClick={() => navigate(`/job/${job.id}`)}
+                              onClick={() => navigate(`/job/${job._id}`)}
                               disabled={missed === true}
                         >
                               Apply Now

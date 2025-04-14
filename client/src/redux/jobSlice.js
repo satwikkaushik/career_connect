@@ -7,7 +7,12 @@ export const fetchAnalytics = createAsyncThunk(
       "jobs/fetchAnalytics",
       async (_, { rejectWithValue }) => {
             try {
-                  const response = await axios.get(`${SERVER_URL}/analytics`);
+                  const response = await axios.get(`${SERVER_URL}/analytics`, {
+                        headers: {
+                              "Content-Type": "application/json",
+                        },
+                        withCredentials: true,
+                  });
                   return response.data;
             } catch (error) {
                   return rejectWithValue(error.response.data);
@@ -21,8 +26,13 @@ export const fetchJobs = createAsyncThunk(
             try {
                   const { userRole } = getState().jobs;
                   const endpoint =
-                        userRole === "admin" ? "/student" : "/uni/jobs";
-                  const response = await axios.get(`${SERVER_URL}${endpoint}`);
+                        userRole === "admin" ? "/student/jobs" : "/uni/jobs";
+                  const response = await axios.get(`${SERVER_URL}${endpoint}`, {
+                        headers: {
+                              "Content-Type": "application/json",
+                        },
+                        withCredentials: true,
+                  });
                   return response.data;
             } catch (error) {
                   return rejectWithValue(error.response.data);
