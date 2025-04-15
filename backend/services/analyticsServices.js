@@ -2,7 +2,10 @@ import { Analytics } from "../models/analytics.js";
 
 export async function fetchAllAnalytics() {
   try {
-    const data = await Analytics.find();
+    const data = await Analytics.find()
+      .populate("job_id", "title")
+      .populate("applied_students", "name")
+      .populate("selected_students", "name");
 
     if (!data) {
       return Promise.reject("No data found");

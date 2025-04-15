@@ -9,7 +9,7 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  tags: {
+  skills: {
     type: [String],
     required: true,
   },
@@ -22,11 +22,11 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  roles: {
+  responsibilities: {
     type: [String],
     required: false,
   },
-  requirements: {
+  eligibility: {
     type: [String],
     required: false,
   },
