@@ -19,6 +19,7 @@ import { Button, Chip } from "@mui/material";
 
 const JobDetail = () => {
       const { id } = useParams();
+      console.log("my"+id);
       const navigate = useNavigate();
       const [isChecked, setIsChecked] = useState(false);
       const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +33,8 @@ const JobDetail = () => {
       // Access job details from Redux store
       const jobs = useSelector((state) => state.jobs.jobs); // Access nested array
 
-      const job = jobs.find((job) => job.id === Number(id)); // Convert id to number
+      const job = jobs.find((job) => job._id === id); // Convert id to number
+      console.log(job);
       const userRole = useSelector((state) => state.jobs.userRole);
       console.log(userRole);
 
