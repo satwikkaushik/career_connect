@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addJob } from "../../Redux/jobSlice"; // Import Redux action
+import { useDispatch } from "react-redux";
+import { fetchJobs } from "../../Redux/jobSlice"; // Change this import
 import { ArrowBack } from "@mui/icons-material";
 import axios from "axios";
 
@@ -9,13 +9,11 @@ const BACKEND_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:5000";
 
 export default function AddJob() {
       const dispatch = useDispatch();
-      const jobs = useSelector((state) => state.jobs.jobs); // Get current jobs array
-      const navigate = useNavigate(); // Use router navigation hook
+      const navigate = useNavigate();
 
       const [formData, setFormData] = useState({
             jobTitle: "",
             company: "",
-            role: "",
             location: "",
             jobType: "",
             salary: "",
@@ -25,8 +23,9 @@ export default function AddJob() {
             responsibilities: "",
             eligibility: "",
             applyLink: "",
-            applied: false,
-            missed: false,
+            course: "",
+            branch: "",
+            semester: "", // numeric
       });
 
       const handleChange = (e) => {
@@ -39,39 +38,53 @@ export default function AddJob() {
 
       const handleSubmit = async (e) => {
             e.preventDefault();
+
+            // Build the newJob object in the required format
             const newJob = {
-                  id: jobs.length + 1,
                   title: formData.jobTitle,
                   company: formData.company,
-                  location: formData.location,
+                  tags: formData.skills.split(",").map((skill) => skill.trim()),
                   jobType: formData.jobType,
-                  salary: formData.salary,
-                  deadline: formData.lastDate,
-                  skills: formData.skills
-                        .split(",")
-                        .map((skill) => skill.trim()),
                   description: formData.description,
-                  eligibility: formData.eligibility,
-                  responsibilities: formData.responsibilities
+                  roles: formData.responsibilities
                         .split("\n")
-                        .map((res) => res.trim()),
+                        .map((role) => role.trim())
+                        .filter((r) => r !== ""),
+                  requirements: formData.eligibility
+                        .split("\n")
+                        .map((req) => req.trim())
+                        .filter((r) => r !== ""),
+                  salary: Number(formData.salary),
+                  location: formData.location,
+                  deadline: formData.lastDate,
                   applyLink: formData.applyLink,
-                  applied: formData.applied,
-                  missed: formData.missed,
+                  course: formData.course,
+                  branch: formData.branch,
+                  semester: Number(formData.semester),
             };
+
+            console.log("Payload to backend:", JSON.stringify(newJob, null, 2));
 
             try {
                   const response = await axios.post(
                         `${BACKEND_URL}/uni/jobs/new`,
-                        newJob
+                        newJob,
+                        {
+                              headers: {
+                                    "Content-Type": "application/json",
+                              },
+                              withCredentials: true,
+                        }
                   );
+
                   if (response.status === 200 || response.status === 201) {
-                        dispatch(addJob(newJob));
+                        // Replace dispatch(addJob()) with dispatch(fetchJobs())
+                        dispatch(fetchJobs());
                         console.log("New Job Added:", newJob);
+                        // Reset form data (if desired, you can add default values for course/branch/semester)
                         setFormData({
                               jobTitle: "",
                               company: "",
-                              role: "",
                               location: "",
                               jobType: "",
                               salary: "",
@@ -81,14 +94,21 @@ export default function AddJob() {
                               responsibilities: "",
                               eligibility: "",
                               applyLink: "",
-                              applied: false,
-                              missed: false,
+                              course: "",
+                              branch: "",
+                              semester: "",
                         });
                         navigate("/admin-dashboard");
                   }
             } catch (error) {
-                  console.error("Error adding job:", error);
-                  // Handle error appropriately
+                  console.error(
+                        "Error adding job:",
+                        error.response?.data || error.message
+                  );
+                  alert(
+                        "Failed to add job: " +
+                              (error.response?.data?.message || error.message)
+                  );
             }
       };
 
@@ -99,9 +119,15 @@ export default function AddJob() {
                   "Data Analyst": `As a Data Analyst at ${formData.company}, you will analyze data trends and provide insights using SQL and Python.`,
             };
 
-            const sampleResponsibilities = `- Develop and maintain web applications using modern frameworks.\n- Write efficient and scalable backend services.\n- Collaborate with cross-functional teams for new features.\n- Optimize applications for performance and security.`;
+            const sampleResponsibilities =
+                  `Assist in building scalable web applications\n` +
+                  `Collaborate with senior developers\n` +
+                  `Write clean, maintainable code`;
 
-            const sampleEligibility = `Candidates must have a Bachelor's degree in Computer Science or a related field with at least 1+ years of experience.`;
+            const sampleEligibility =
+                  `Knowledge of JavaScript and React\n` +
+                  `Understanding of REST APIs\n` +
+                  `Good problem-solving skills`;
 
             setFormData((prevData) => ({
                   ...prevData,
@@ -145,36 +171,32 @@ export default function AddJob() {
                                     required
                                     className="w-full p-3 bg-dark text-white border border-gray rounded-lg focus:border-primary focus:outline-none"
                               />
-                              <input
-                                    type="text"
-                                    name="role"
-                                    placeholder="Role"
-                                    value={formData.role}
-                                    onChange={handleChange}
-                                    className="w-full p-3 bg-dark text-white border border-gray rounded-lg focus:border-primary focus:outline-none"
-                              />
+                              {/* Role field is not part of the expected output */}
                               <input
                                     type="text"
                                     name="location"
-                                    placeholder="Location"
+                                    placeholder="Location (e.g., Remote)"
                                     value={formData.location}
                                     onChange={handleChange}
+                                    required
                                     className="w-full p-3 bg-dark text-white border border-gray rounded-lg focus:border-primary focus:outline-none"
                               />
                               <input
                                     type="text"
                                     name="jobType"
-                                    placeholder="Job Type (e.g., Full-Time)"
+                                    placeholder="Job Type (e.g., Internship)"
                                     value={formData.jobType}
                                     onChange={handleChange}
+                                    required
                                     className="w-full p-3 bg-dark text-white border border-gray rounded-lg focus:border-primary focus:outline-none"
                               />
                               <input
-                                    type="text"
+                                    type="number"
                                     name="salary"
-                                    placeholder="Salary (e.g., $120,000 - $150,000)"
+                                    placeholder="Salary (numeric, e.g., 15000)"
                                     value={formData.salary}
                                     onChange={handleChange}
+                                    required
                                     className="w-full p-3 bg-dark text-white border border-gray rounded-lg focus:border-primary focus:outline-none"
                               />
                               <input
@@ -188,9 +210,10 @@ export default function AddJob() {
                               <input
                                     type="text"
                                     name="skills"
-                                    placeholder="Skills Required (comma separated)"
+                                    placeholder="Tags / Skills (comma separated, e.g., JavaScript, React, Node.js)"
                                     value={formData.skills}
                                     onChange={handleChange}
+                                    required
                                     className="w-full p-3 bg-dark text-white border border-gray rounded-lg focus:border-primary focus:outline-none"
                               />
                               <input
@@ -202,6 +225,34 @@ export default function AddJob() {
                                     required
                                     className="w-full p-3 bg-dark text-white border border-gray rounded-lg focus:border-primary focus:outline-none"
                               />
+                              <input
+                                    type="text"
+                                    name="course"
+                                    placeholder="Course (e.g., B.Tech)"
+                                    value={formData.course}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-3 bg-dark text-white border border-gray rounded-lg focus:border-primary focus:outline-none"
+                              />
+                              <input
+                                    type="text"
+                                    name="branch"
+                                    placeholder="Branch (e.g., Computer Science)"
+                                    value={formData.branch}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-3 bg-dark text-white border border-gray rounded-lg focus:border-primary focus:outline-none"
+                              />
+                              <input
+                                    type="number"
+                                    name="semester"
+                                    placeholder="Semester (numeric, e.g., 4)"
+                                    value={formData.semester}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-3 bg-dark text-white border border-gray rounded-lg focus:border-primary focus:outline-none"
+                              />
+
                               <button
                                     type="button"
                                     onClick={generateDescription}
@@ -209,35 +260,38 @@ export default function AddJob() {
                               >
                                     Generate Description with AI
                               </button>
+
                               <textarea
                                     name="description"
                                     placeholder="Job Description"
                                     value={formData.description}
                                     onChange={handleChange}
-                                    className="w-full p-3 bg-dark text-white border border-gray rounded-lg h-24 focus:border-primary focus:outline-none"
                                     required
+                                    className="w-full p-3 bg-dark text-white border border-gray rounded-lg h-24 focus:border-primary focus:outline-none"
                               />
                               <textarea
                                     name="responsibilities"
-                                    placeholder="Responsibilities"
+                                    placeholder="Roles / Responsibilities (one per line)"
                                     value={formData.responsibilities}
                                     onChange={handleChange}
+                                    required
                                     className="w-full p-3 bg-dark text-white border border-gray rounded-lg h-24 focus:border-primary focus:outline-none"
                               />
                               <textarea
                                     name="eligibility"
-                                    placeholder="Eligibility Criteria"
+                                    placeholder="Eligibility / Requirements (one per line)"
                                     value={formData.eligibility}
                                     onChange={handleChange}
+                                    required
                                     className="w-full p-3 bg-dark text-white border border-gray rounded-lg h-24 focus:border-primary focus:outline-none"
                               />
 
                               <div className="flex justify-between">
                                     <button
                                           type="button"
-                                          onClick={() => {
-                                                navigate("/admin-dashboard");
-                                          }}
+                                          onClick={() =>
+                                                navigate("/admin-dashboard")
+                                          }
                                           className="bg-gray text-dark px-4 py-2 rounded-lg hover:bg-brightBlue hover:text-white transition"
                                     >
                                           Cancel

@@ -33,6 +33,7 @@ const AuthPage = () => {
                                     headers: {
                                           "Content-Type": "application/json",
                                     },
+                                    withCredentials: true,
                               }
                         );
                         if (response.status === 200) {
@@ -51,6 +52,7 @@ const AuthPage = () => {
                                     headers: {
                                           "Content-Type": "application/json",
                                     },
+                                    withCredentials: true,
                               }
                         );
                         if (response.status === 200) {
