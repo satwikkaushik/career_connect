@@ -1,5 +1,10 @@
 import express from "express";
-import { getJobs, getJobById, getExpiredJobs } from "../controllers/student.js";
+import {
+  getJobs,
+  getJobById,
+  getExpiredJobs,
+  getUnappliedJobs,
+} from "../controllers/student.js";
 import { isAuthorizedAsStudent } from "../middlewares/isAuthorized.js";
 
 export const router = express.Router();
@@ -9,6 +14,10 @@ router.use(isAuthorizedAsStudent);
 // below functions are implemented
 router.get("/", (req, res) => {
   return getJobs(req, res);
+});
+
+router.get("/missed", (req, res) => {
+  return getUnappliedJobs(req, res);
 });
 
 // router.get("/jobs/:id", (req, res) => {
