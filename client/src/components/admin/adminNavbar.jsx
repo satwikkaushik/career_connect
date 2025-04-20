@@ -108,7 +108,7 @@ const AdminNavbar = ({ header }) => {
                   </div>
 
                   {/* Navbar */}
-                  <nav className="p-4 bg-deepBlue flex items-center shadow-md relative">
+                  <nav className="p-4 pt-14 md:pt-4 bg-deepBlue flex items-center shadow-md relative">
                         {/* Menu Button (Left Aligned) */}
                         <button
                               onClick={(e) => {

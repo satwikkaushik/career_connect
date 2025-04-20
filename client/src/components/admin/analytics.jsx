@@ -1,10 +1,16 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ArrowBack } from "@mui/icons-material";
-import {  Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { motion } from "framer-motion";
+import { fetchAnalytics } from "../../Redux/jobSlice";
+import { useEffect } from "react";
 
 export default function Analytics() {
+      const dispatch = useDispatch();
+      useEffect(() => {
+            dispatch(fetchAnalytics());
+      }, []);
       const jobs = useSelector((state) => state.jobs.jobs);
       const analytics = useSelector((state) => state.jobs.analytics);
       const navigate = useNavigate();
@@ -38,8 +44,8 @@ export default function Analytics() {
                   {/* Job Cards Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {jobs.map((job) => {
-                              const jobAnalytics = analytics.find(
-                                    (item) => item.id === job.id
+                              const jobAnalytics = analytics?.find(
+                                    (item) => item.job_id._id === job._id
                               );
 
                               return (
@@ -51,13 +57,23 @@ export default function Analytics() {
                                           <h3 className="text-xl font-bold text-[#00A6FB]">
                                                 {job.title}
                                           </h3>
-                                          <p className="text-white">{job.company}</p>
-                                          <p className="text-[#00A6FB]">{job.jobType}</p>
+                                          <p className="text-white">
+                                                {job.company}
+                                          </p>
+                                          <p className="text-[#00A6FB]">
+                                                {job.jobType}
+                                          </p>
                                           <p>Location: {job.location}</p>
                                           <p>Salary: {job.salary}</p>
-                                          <p>Applicants: {jobAnalytics?.applicants || 0}</p>
+                                          <p>
+                                                Applicants:{" "}
+                                                {jobAnalytics?.applied_students
+                                                      ?.length || 0}
+                                          </p>
                                           <p className="text-green-400">
-                                                Eligible Candidates: {jobAnalytics?.eligible || 0}
+                                                Selected:{" "}
+                                                {jobAnalytics?.selected_students
+                                                      ?.length || 0}
                                           </p>
 
                                           <Button
@@ -66,10 +82,14 @@ export default function Analytics() {
                                                 sx={{
                                                       mt: 2,
                                                       bgcolor: "#00A6FB",
-                                                      "&:hover": { bgcolor: "#0582CA" },
+                                                      "&:hover": {
+                                                            bgcolor: "#0582CA",
+                                                      },
                                                 }}
                                                 onClick={() =>
-                                                      navigate(`/admin-dashboard/analytics/${job.id}`)
+                                                      navigate(
+                                                            `/admin-dashboard/analytics/${jobAnalytics._id}`
+                                                      )
                                                 }
                                           >
                                                 View Detailed Analytics

@@ -4,6 +4,15 @@ import { useNavigate } from "react-router-dom";
 const JobCard = ({ job, missed, applied,admin }) => {
       const navigate = useNavigate();
 
+      const formatDate = (dateString) => {
+            const options = {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+            };
+            return new Date(dateString).toLocaleDateString("en-US", options);
+      };
+
       return (
             <motion.div
                   key={job._id}
@@ -29,7 +38,7 @@ const JobCard = ({ job, missed, applied,admin }) => {
                         {job.jobType}
                   </p>
                   <p className="text-xs text-gray-400">
-                        Last Date: {job.deadline}
+                        Last Date: {formatDate(job.deadline)}
                   </p>
                   <p className="text-sm mt-2 text-gray-200">
                         {job.description}

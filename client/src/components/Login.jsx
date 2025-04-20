@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUserRole } from "../Redux/jobSlice";
+import { setUserRole, setUserId } from "../Redux/jobSlice";
 import { Button, TextField, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { motion } from "framer-motion";
@@ -37,8 +37,13 @@ const AuthPage = () => {
                               }
                         );
                         if (response.status === 200) {
-                              console.log(response.data);
+                              console.log("Login response:", response.data);
                               dispatch(setUserRole("student"));
+                              // Extract ID from the response string
+                              const idMatch =
+                                    response.data.match(/id:\s*([^,\s]+)/);
+                              const studentId = idMatch ? idMatch[1] : null;
+                              dispatch(setUserId(studentId));
                               navigate("/student-dashboard");
                         }
                   } else if (email.includes("@")) {
@@ -79,7 +84,7 @@ const AuthPage = () => {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}
-                        className="bg-[#003554] p-8 my-10 rounded-2xl shadow-2xl w-[400px] border border-[#00A6FB]/20 backdrop-blur-md"
+                        className="bg-[#003554] p-8 my-10 mx-5 rounded-2xl shadow-2xl w-[400px] border border-[#00A6FB]/20 backdrop-blur-md"
                   >
                         <h2 className="text-white text-3xl font-bold text-center mb-6">
                               Welcome Back
