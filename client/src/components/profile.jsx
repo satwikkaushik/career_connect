@@ -2,10 +2,14 @@ import { useState, useEffect } from "react";
 import { CameraAlt, ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 const ProfilePage = () => {
       const navigate = useNavigate();
       const userRole = useSelector((state) => state.jobs.userRole);
+      const [userData, setUserData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
 
       // Load stored profile picture from Local Storage (if available)
       const storedProfilePic =
@@ -32,29 +36,50 @@ const ProfilePage = () => {
             }
       };
 
-      // Static User Information
-      const user = {
-            name: "Arpit Kumar Saxena",
-            email: "2200000@geu.ac.in",
-            role: "Student",
-            universityRollNo: "220000XXX",
-            course: "B.Tech",
-            branch: "Computer Science & Engineering",
-            semester: "6th Semester",
-      };
-      // Static User Information
-      const admin = {
-            name: "Arpit Kumar Saxena",
-            email: "2200000@geu.ac.in",
-            role: "Admin",
-            AdminID: "220000XXX",
+      useEffect(() => {
+            const fetchUserData = async () => {
+                  try {
+                        const BACKEND_URL = import.meta.env.VITE_SERVER_URL;
+                        const endpoint =
+                              userRole === "student"
+                                    ? `${BACKEND_URL}/account/student/profile`
+                                    : `${BACKEND_URL}/account/uni/profile`;
 
-      };
+                        const response = await axios.get(endpoint, {
+                              withCredentials: true,
+                        });
+                        setUserData(response.data);
+                  } catch (err) {
+                        setError("Failed to load profile data");
+                        console.error(err);
+                  } finally {
+                        setLoading(false);
+                  }
+            };
+
+            fetchUserData();
+      }, [userRole]);
+
+      if (loading) {
+            return (
+                  <div className="min-h-screen bg-[#051923] text-white flex items-center justify-center">
+                        Loading...
+                  </div>
+            );
+      }
+
+      if (error) {
+            return (
+                  <div className="min-h-screen bg-[#051923] text-white flex items-center justify-center">
+                        {error}
+                  </div>
+            );
+      }
 
       return (
             <>
                   {/* Back Button */}
-                  {userRole==="student" ? (
+                  {userRole === "student" ? (
                         <button
                               onClick={() => navigate("/student-dashboard")}
                               className="absolute top-4 left-4 bg-[#00A6FB] text-white p-2 rounded-full hover:bg-[#0582CA] transition"
@@ -90,55 +115,54 @@ const ProfilePage = () => {
                                     </label>
                               </div>
 
-                              {/* Static User Information */}
+                              {/* Dynamic User Information */}
                               <div className="mt-4">
                                     <h2 className="text-2xl font-semibold">
-                                          {userRole==="student" ? user.name : admin.name}
+                                          {userData?.name}
                                     </h2>
                                     <p className="text-gray-300">
-                                          {userRole==="student" ? user.email : admin.email}
+                                          {userData?.email}
                                     </p>
                                     <p className="text-gray-400 font-semibold">
-                                          {userRole==="student" ? user.role : admin.role}
+                                          {userData?.role}
                                     </p>
                               </div>
 
-                              {userRole==="student" ? (
+                              {userRole === "student" ? (
                                     <div className="mt-4 text-left space-y-3">
                                           <p className="text-gray-300">
                                                 <span className="font-semibold text-white">
                                                       University Roll No:{" "}
                                                 </span>
-                                                {user.universityRollNo}
+                                                {userData?.uniRollNo}
                                           </p>
                                           <p className="text-gray-300">
                                                 <span className="font-semibold text-white">
                                                       Course:{" "}
                                                 </span>
-                                                {user.course}
+                                                {userData?.course}
                                           </p>
                                           <p className="text-gray-300">
                                                 <span className="font-semibold text-white">
                                                       Branch:{" "}
                                                 </span>
-                                                {user.branch}
+                                                {userData?.branch}
                                           </p>
                                           <p className="text-gray-300">
                                                 <span className="font-semibold text-white">
                                                       Semester:{" "}
                                                 </span>
-                                                {user.semester}
+                                                {userData?.semester}
                                           </p>
                                     </div>
                               ) : (
                                     <p className="text-gray-300">
                                           <span className="font-semibold text-white">
-                                                AdminID:{" "}
+                                                Employee ID:{" "}
                                           </span>
-                                          {admin.AdminID}
+                                          {userData?.employeeId}
                                     </p>
                               )}
-
                         </div>
                   </div>
             </>

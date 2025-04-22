@@ -93,7 +93,7 @@ function SignUpAdmin() {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}
-                        className="bg-[#003554] p-8 my-10 rounded-2xl shadow-2xl w-[400px] border border-[#00A6FB]/20 backdrop-blur-md"
+                        className="bg-[#003554] p-8 mx-5 my-10 rounded-2xl shadow-2xl w-[400px] border border-[#00A6FB]/20 backdrop-blur-md"
                   >
                         <h2 className="text-white text-3xl font-bold text-center mb-6">
                               Admin Sign Up

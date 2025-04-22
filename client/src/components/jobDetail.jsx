@@ -1,9 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { removeJob } from "../Redux/jobSlice";
 import axios from "axios";
 import {
       ArrowBack,
@@ -19,12 +17,35 @@ import { Button, Chip } from "@mui/material";
 
 const JobDetail = () => {
       const { id } = useParams();
-      console.log("my"+id);
       const navigate = useNavigate();
       const [isChecked, setIsChecked] = useState(false);
       const [isLoading, setIsLoading] = useState(false);
       const [isLoadingSelected, setIsLoadingSelected] = useState(false);
+      const [isApplied, setIsApplied] = useState(false);
+      const [isSelected, setIsSelected] = useState(false);
       const dispatch = useDispatch();
+
+      // Load states from localStorage on component mount
+      useEffect(() => {
+            const appliedStatus = localStorage.getItem(`applied-${id}`);
+            const selectedStatus = localStorage.getItem(`selected-${id}`);
+            if (appliedStatus) {
+                  setIsChecked(true);
+                  setIsApplied(true);
+            }
+            if (selectedStatus) {
+                  setIsSelected(true);
+            }
+      }, [id]);
+
+      const formatDate = (dateString) => {
+            const options = {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+            };
+            return new Date(dateString).toLocaleDateString("en-US", options);
+      };
 
       const editDetails = () => {
             navigate(`/admin-dashboard/edit-job/${id}`); // Redirect to edit job page
@@ -37,6 +58,8 @@ const JobDetail = () => {
       console.log(job);
       const userRole = useSelector((state) => state.jobs.userRole);
       console.log(userRole);
+      const userId = useSelector((state) => state.jobs.userId);
+      console.log(userId);
 
       // Handle case when job is not found
       if (!job) {
@@ -50,15 +73,26 @@ const JobDetail = () => {
       const clickChange = async () => {
             setIsLoading(true);
             const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+            console.log(job._id);
+            console.log(userId);
             try {
                   const response = await axios.post(
                         `${SERVER_URL}/analytics/studentApplied`,
                         {
-                              jobId: job.id,
+                              jobId: job._id,
+                              studentId: userId,
+                        },
+                        {
+                              headers: {
+                                    "Content-Type": "application/json",
+                              },
+                              withCredentials: true,
                         }
                   );
                   if (response.status === 200) {
                         setIsChecked(!isChecked);
+                        setIsApplied(true); // Set applied state to true
+                        localStorage.setItem(`applied-${id}`, "true");
                   }
             } catch (error) {
                   console.error("Error updating application status:", error);
@@ -75,11 +109,20 @@ const JobDetail = () => {
                   const response = await axios.post(
                         `${SERVER_URL}/analytics/studentSelected`,
                         {
-                              jobId: job.id,
+                              jobId: job._id,
+                              studentId: userId,
+                        },
+                        {
+                              headers: {
+                                    "Content-Type": "application/json",
+                              },
+                              withCredentials: true,
                         }
                   );
                   if (response.status === 200) {
-                        // Handle successful selection
+                        setIsSelected(true); // Set selected state to true
+                        localStorage.setItem(`selected-${id}`, "true");
+                        alert("You have been selected for this role!");
                   }
             } catch (error) {
                   console.error("Error updating selection status:", error);
@@ -89,10 +132,26 @@ const JobDetail = () => {
             }
       };
 
-      const handleDelete = () => {
-            dispatch(removeJob(job.id)); // Dispatch action to remove the job
-            //logic to delete the job from the database
-            navigate("/admin-dashboard"); // Redirect after deletion
+      const handleDelete = async () => {
+            if (window.confirm("Are you sure you want to delete this job?")) {
+                  try {
+                        const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+                        await axios.post(
+                              `${SERVER_URL}/uni/jobs/delete/${id}`,
+                              {},
+                              {
+                                    withCredentials: true,
+                              }
+                        );
+                        navigate("/admin-dashboard");
+                  } catch (error) {
+                        console.error(
+                              "Error deleting job:",
+                              error.response?.data || error.message
+                        );
+                        alert("Failed to delete job");
+                  }
+            }
       };
 
       return (
@@ -159,7 +218,7 @@ const JobDetail = () => {
                                     <CalendarToday className="text-[#00A6FB]" />{" "}
                                     Deadline:{" "}
                                     <span className="font-semibold">
-                                          {job.deadline}
+                                          {formatDate(job.deadline)}
                                     </span>
                               </p>
                         </div>
@@ -249,9 +308,10 @@ const JobDetail = () => {
                                                       type="checkbox"
                                                       onChange={clickChange}
                                                       disabled={
-                                                            job.applied ||
+                                                            isApplied ||
                                                             isLoading
                                                       }
+                                                      checked={isApplied}
                                                       className="w-4 h-4"
                                                 />
                                                 <p className="text-sm sm:text-base">
@@ -269,8 +329,10 @@ const JobDetail = () => {
                                                       className="w-4 h-4"
                                                       disabled={
                                                             !isChecked ||
-                                                            isLoadingSelected
+                                                            isLoadingSelected ||
+                                                            isSelected
                                                       }
+                                                      checked={isSelected}
                                                 />
                                                 <p className="text-sm sm:text-base">
                                                       Select checkbox if you are

@@ -1,31 +1,61 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ArrowBack } from "@mui/icons-material";
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import {
+      PieChart,
+      Pie,
+      Cell,
+      Tooltip,
+      Legend,
+      ResponsiveContainer,
+} from "recharts";
 import { motion } from "framer-motion";
-import { Work, Business, LocationOn, MonetizationOn, People } from "@mui/icons-material";
+import {
+      Work,
+      Business,
+      LocationOn,
+      MonetizationOn,
+      People,
+} from "@mui/icons-material";
 
 export default function JobAnalytics() {
       const { id } = useParams();
       const navigate = useNavigate();
-
-      // Fetch job and analytics data from Redux store
-      const job = useSelector((state) =>
-            state.jobs.jobs.find((job) => job.id === parseInt(id))
-      );
       const jobAnalytics = useSelector((state) =>
-            state.jobs.analytics.find((item) => item.id === parseInt(id))
+            state.jobs.analytics.find((item) => item._id === id)
       );
+      console.log(jobAnalytics);
+
+      const jid=jobAnalytics.job_id._id;
+      const jobs = useSelector((state) => state.jobs.jobs); // Access nested array
+      const job = jobs.find((job) => job._id === jid); // Convert id to number
+      console.log(job);
 
       if (!job || !jobAnalytics) {
-            return <h2 className="text-center text-white mt-10">Job Not Found</h2>;
+            return (
+                  <h2 className="text-center text-white mt-10">
+                        Job Not Found
+                  </h2>
+            );
       }
 
       // Pie Chart Data
       const pieData = [
-            { name: "Applied", value: jobAnalytics.applicants || 0, color: "#00A6FB" },
-            { name: "Eligible", value: jobAnalytics.eligible || 0, color: "#0582CA" },
-            { name: "Selected", value: jobAnalytics.selected || 0, color: "#00E396" },
+            {
+                  name: "Applied",
+                  value: jobAnalytics.applied_students.length || 0,
+                  color: "#00A6FB",
+            },
+            // {
+            //       name: "Eligible",
+            //       value: jobAnalytics.eligible || 0,
+            //       color: "#0582CA",
+            // },
+            {
+                  name: "Selected",
+                  value: jobAnalytics.selected_students.length || 0,
+                  color: "#00E396",
+            },
       ];
 
       return (
@@ -87,7 +117,9 @@ export default function JobAnalytics() {
                               </div>
 
                               <div>
-                                    <p className="text-[#57aeda] font-bold">Type:</p>
+                                    <p className="text-[#57aeda] font-bold">
+                                          Type:
+                                    </p>
                                     <p className="text-white">{job.jobType}</p>
                               </div>
 
@@ -96,7 +128,9 @@ export default function JobAnalytics() {
                                           <People className="text-lg mr-2" />
                                           Total Applicants:
                                     </p>
-                                    <p className="text-white">{jobAnalytics.applicants || 0}</p>
+                                    <p className="text-white">
+                                          {jobAnalytics.applied_students.length || 0}
+                                    </p>
                               </div>
                         </div>
                   </div>
@@ -105,7 +139,9 @@ export default function JobAnalytics() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Pie Chart */}
                         <div className="p-4 bg-gradient-to-b from-[#001F3F] to-[#012A4A] text-white rounded-lg border border-white shadow-lg backdrop-blur-md">
-                              <h3 className="text-lg font-semibold mb-2">Applicants Breakdown</h3>
+                              <h3 className="text-lg font-semibold mb-2">
+                                    Applicants Breakdown
+                              </h3>
                               <ResponsiveContainer width="100%" height={300}>
                                     <PieChart>
                                           <Pie
@@ -117,7 +153,10 @@ export default function JobAnalytics() {
                                                 dataKey="value"
                                           >
                                                 {pieData.map((entry, index) => (
-                                                      <Cell key={`cell-${index}`} fill={entry.color} />
+                                                      <Cell
+                                                            key={`cell-${index}`}
+                                                            fill={entry.color}
+                                                      />
                                                 ))}
                                           </Pie>
                                           <Tooltip />
@@ -128,17 +167,26 @@ export default function JobAnalytics() {
 
                         {/* Applicants List */}
                         <div className="p-4 bg-gradient-to-b from-[#001F3F] to-[#012A4A] text-white rounded-lg border border-white shadow-lg backdrop-blur-md">
-                              <h3 className="text-lg font-semibold mb-2">Applicants List</h3>
-                              {job.applicants?.length > 0 ? (
+                              <h3 className="text-lg font-semibold mb-2">
+                                    Applicants List
+                              </h3>
+                              {(jobAnalytics.applied_students.length > 0) ? (
                                     <ul>
-                                          {job.applicants.map((applicant, index) => (
-                                                <li key={index} className="text-gray-300">
-                                                      {applicant.name} ({applicant.email})
-                                                </li>
-                                          ))}
+                                          {jobAnalytics.applied_students.map(
+                                                (applicant, index) => (
+                                                      <li
+                                                            key={index}
+                                                            className="text-gray-300"
+                                                      >
+                                                            {applicant.name}
+                                                      </li>
+                                                )
+                                          )}
                                     </ul>
                               ) : (
-                                    <p className="text-white">No applicants yet.</p>
+                                    <p className="text-white">
+                                          No applicants yet.
+                                    </p>
                               )}
                         </div>
                   </div>

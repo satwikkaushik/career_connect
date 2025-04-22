@@ -53,13 +53,64 @@ function SignUpUser() {
             }
       };
 
+      const courseOptions = [
+            { value: "", label: "Select Course" },
+            { value: "B.Tech", label: "B.Tech" },
+            { value: "M.Tech", label: "M.Tech" },
+            { value: "BCA", label: "BCA" },
+            { value: "MCA", label: "MCA" },
+            { value: "BBA", label: "BBA" },
+            { value: "MBA", label: "MBA" },
+      ];
+
+      const branchOptions = {
+            "B.Tech": [
+                  "Computer Science",
+                  "Information Technology",
+                  "Electronics & Communication",
+                  "Electrical Engineering",
+                  "Mechanical Engineering",
+                  "Civil Engineering",
+            ],
+            "M.Tech": [
+                  "Computer Science",
+                  "Digital Communication",
+                  "Structural Engineering",
+                  "Power Systems",
+            ],
+            BCA: ["Computer Applications"],
+            MCA: ["Computer Applications"],
+            BBA: [
+                  "Finance",
+                  "Marketing",
+                  "Human Resource",
+                  "International Business",
+            ],
+            MBA: [
+                  "Finance",
+                  "Marketing",
+                  "Human Resource",
+                  "Operations Management",
+                  "International Business",
+            ],
+      };
+
+      const semesterOptions = {
+            "B.Tech": 8,
+            "M.Tech": 4,
+            BCA: 6,
+            MCA: 4,
+            BBA: 6,
+            MBA: 4,
+      };
+
       return (
             <div className="flex items-center justify-center min-h-screen bg-[#051923]">
                   <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}
-                        className="bg-[#003554] p-8 my-10 rounded-2xl shadow-2xl w-[400px] border border-[#00A6FB]/20 backdrop-blur-md"
+                        className="bg-[#003554] p-8 mx-5 my-10 rounded-2xl shadow-2xl w-[400px] border border-[#00A6FB]/20 backdrop-blur-md"
                   >
                         <h2 className="text-white text-3xl font-bold text-center mb-6">
                               Create Account
@@ -91,44 +142,87 @@ function SignUpUser() {
                                     sx={inputStyles}
                               />
 
-                              {/* Course Selection */}
-                              <select
+                              <TextField
+                                    select
                                     name="course"
                                     value={formData.course}
-                                    onChange={handleChange}
-                                    className="w-full p-3 rounded-lg bg-[#012A4A] text-white border border-[#00A6FB] focus:outline-none focus:border-[#0582CA]"
+                                    onChange={(e) => {
+                                          setFormData({
+                                                ...formData,
+                                                course: e.target.value,
+                                                branch: "",
+                                                semester: "",
+                                          });
+                                    }}
+                                    sx={inputStyles}
+                                    SelectProps={{
+                                          native: true,
+                                    }}
                               >
-                                    <option value="">Select Course</option>
-                                    <option value="B.Tech">B.Tech</option>
-                                    <option value="M.Tech">M.Tech</option>
-                                    <option value="BCA">BCA</option>
-                                    <option value="MCA">MCA</option>
-                              </select>
+                                    {courseOptions.map((option) => (
+                                          <option
+                                                key={option.value}
+                                                value={option.value}
+                                          >
+                                                {option.label}
+                                          </option>
+                                    ))}
+                              </TextField>
 
                               <TextField
-                                    label="Branch"
+                                    select
                                     name="branch"
-                                    variant="outlined"
-                                    fullWidth
                                     value={formData.branch}
                                     onChange={handleChange}
+                                    disabled={!formData.course}
                                     sx={inputStyles}
-                              />
+                                    SelectProps={{
+                                          native: true,
+                                    }}
+                              >
+                                    <option value="">Select Branch</option>
+                                    {formData.course &&
+                                          branchOptions[formData.course].map(
+                                                (branch) => (
+                                                      <option
+                                                            key={branch}
+                                                            value={branch}
+                                                      >
+                                                            {branch}
+                                                      </option>
+                                                )
+                                          )}
+                              </TextField>
 
-                              {/* Semester Selection */}
-                              <select
+                              <TextField
+                                    select
                                     name="semester"
                                     value={formData.semester}
                                     onChange={handleChange}
-                                    className="w-full p-3 rounded-lg bg-[#012A4A] text-white border border-[#00A6FB] focus:outline-none focus:border-[#0582CA]"
+                                    disabled={!formData.course}
+                                    sx={inputStyles}
+                                    SelectProps={{
+                                          native: true,
+                                    }}
                               >
                                     <option value="">Select Semester</option>
-                                    {Array.from({ length: 8 }, (_, i) => (
-                                          <option key={i + 1} value={i + 1}>
-                                                Semester {i + 1}
-                                          </option>
-                                    ))}
-                              </select>
+                                    {formData.course &&
+                                          Array.from(
+                                                {
+                                                      length: semesterOptions[
+                                                            formData.course
+                                                      ],
+                                                },
+                                                (_, i) => (
+                                                      <option
+                                                            key={i + 1}
+                                                            value={i + 1}
+                                                      >
+                                                            Semester {i + 1}
+                                                      </option>
+                                                )
+                                          )}
+                              </TextField>
 
                               <TextField
                                     label="Email"
@@ -221,14 +315,31 @@ function SignUpUser() {
 
 // **Common Styles**
 const inputStyles = {
+      backgroundColor: "#012A4A !important",
       "& .MuiOutlinedInput-root": {
-            "& fieldset": { borderColor: "#00A6FB" },
-            "&:hover fieldset": { borderColor: "#0582CA" },
-            "&.Mui-focused fieldset": { borderColor: "#00A6FB" },
-            "& input": { color: "#fff", backgroundColor: "#012A4A" }, // Ensures text remains white
+            backgroundColor: "#012A4A !important",
+            "& fieldset": { borderColor: "#00A6FB !important" },
+            "&:hover fieldset": { borderColor: "#0582CA !important" },
+            "&.Mui-focused fieldset": { borderColor: "#00A6FB !important" },
+            "& input": {
+                  color: "#fff !important",
+                  backgroundColor: "#012A4A !important",
+            },
+            "& select": {
+                  color: "#fff !important",
+                  backgroundColor: "#012A4A !important",
+            },
+            "& option": {
+                  backgroundColor: "#012A4A !important",
+                  color: "#fff !important",
+            },
       },
-      "& label": { color: "#ccc" },
-      "& label.Mui-focused": { color: "#00A6FB" },
+      "& .MuiInputLabel-root": {
+            color: "#fff !important",
+            "&.Mui-focused": {
+                  color: "#00A6FB !important",
+            },
+      },
 };
 
 const buttonStyles = {

@@ -31,11 +31,11 @@ export async function setNewJob(req, res) {
     const {
       title,
       company,
-      tags,
+      skills,
       jobType,
       description,
-      roles,
-      requirements,
+      responsibilities,
+      eligibility,
       salary,
       location,
       deadline,
@@ -48,7 +48,7 @@ export async function setNewJob(req, res) {
     if (
       !title ||
       !company ||
-      !tags ||
+      !skills ||
       !jobType ||
       !salary ||
       !location ||
@@ -64,11 +64,11 @@ export async function setNewJob(req, res) {
     const job = await createNewJob({
       title,
       company,
-      tags,
+      skills,
       jobType,
       description,
-      roles,
-      requirements,
+      responsibilities,
+      eligibility,
       salary,
       location,
       deadline,
@@ -94,11 +94,11 @@ export async function setJobByID(req, res) {
     const {
       title,
       company,
-      tags,
+      skills,
       jobType,
       description,
-      roles,
-      requirements,
+      responsibilities,
+      eligibility,
       salary,
       location,
       deadline,
@@ -111,7 +111,7 @@ export async function setJobByID(req, res) {
     if (
       !title ||
       !company ||
-      !tags ||
+      !skills ||
       !jobType ||
       !salary ||
       !location ||
@@ -127,11 +127,11 @@ export async function setJobByID(req, res) {
     const job = await updateJobById(req.params.id, {
       title,
       company,
-      tags,
+      skills,
       jobType,
       description,
-      roles,
-      requirements,
+      responsibilities,
+      eligibility,
       salary,
       location,
       deadline,
