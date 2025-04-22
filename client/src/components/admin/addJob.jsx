@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { fetchJobs } from "../../Redux/jobSlice"; // Change this import
+import { fetchJobs } from "../../Redux/jobSlice";
 import { ArrowBack } from "@mui/icons-material";
 import axios from "axios";
 
@@ -43,14 +43,14 @@ export default function AddJob() {
             const newJob = {
                   title: formData.jobTitle,
                   company: formData.company,
-                  tags: formData.skills.split(",").map((skill) => skill.trim()),
+                  skills: formData.skills.split(",").map((skill) => skill.trim()),
                   jobType: formData.jobType,
                   description: formData.description,
-                  roles: formData.responsibilities
+                  responsibilities: formData.responsibilities
                         .split("\n")
                         .map((role) => role.trim())
                         .filter((r) => r !== ""),
-                  requirements: formData.eligibility
+                  eligibility: formData.eligibility
                         .split("\n")
                         .map((req) => req.trim())
                         .filter((r) => r !== ""),
@@ -78,7 +78,6 @@ export default function AddJob() {
                   );
 
                   if (response.status === 200 || response.status === 201) {
-                        // Replace dispatch(addJob()) with dispatch(fetchJobs())
                         dispatch(fetchJobs());
                         console.log("New Job Added:", newJob);
                         // Reset form data (if desired, you can add default values for course/branch/semester)

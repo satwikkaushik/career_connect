@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateJob } from "../../Redux/jobSlice";
 import axios from "axios";
 
 // Helper function to format date correctly
@@ -28,11 +27,14 @@ const EditJob = () => {
             description: "",
             responsibilities: "",
             eligibility: "",
+            course: "",
+            branch: "",
+            semester: "",
       });
 
       // Get job details from Redux store
       const jobs = useSelector((state) => state.jobs.jobs);
-      const job = jobs.find((job) => job.id === Number(id));
+      const job = jobs.find((job) => job._id === id);
 
       // Update formData with job details after job is found
       useEffect(() => {
@@ -48,6 +50,9 @@ const EditJob = () => {
                         description: job.description,
                         responsibilities: job.responsibilities.join("\n"),
                         eligibility: job.eligibility,
+                        course: job.course || "",
+                        branch: job.branch || "",
+                        semester: job.semester || "",
                   });
             }
       }, [job]);
@@ -89,11 +94,16 @@ const EditJob = () => {
 
             try {
                   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-                  const response = await axios.put(
+                  const response = await axios.post(
                         `${SERVER_URL}/uni/jobs/${id}`,
-                        updatedJob
+                        updatedJob,
+                        {
+                              headers: {
+                                    "Content-Type": "application/json",
+                              },
+                              withCredentials: true,
+                        }
                   );
-                  dispatch(updateJob(response.data)); // Update Redux store with response data
                   navigate("/admin-dashboard");
             } catch (error) {
                   console.error(
@@ -119,6 +129,9 @@ const EditJob = () => {
                                     { label: "Location", name: "location" },
                                     { label: "Job Type", name: "jobType" },
                                     { label: "Salary", name: "salary" },
+                                    { label: "Course", name: "course" },
+                                    { label: "Branch", name: "branch" },
+                                    { label: "Semester", name: "semester" },
                                     {
                                           label: "Eligibility Criteria",
                                           name: "eligibility",
