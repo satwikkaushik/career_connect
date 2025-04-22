@@ -41,8 +41,6 @@ export async function getUnappliedJobs(req, res) {
     const missedJobs = [];
     const studentId = req.user._id.toString();
 
-    console.log("Student ID: ", studentId);
-
     const jobs = await fetchExpiredJobs();
     if (!jobs) {
       return res.status(200).json({ missedJobs: missedJobs });
@@ -66,7 +64,6 @@ export async function getUnappliedJobs(req, res) {
         for (let j = 0; j < applied_students.length; j++) {
           studentsList.push("" + applied_students[j]);
         }
-        console.log("Students List: ", studentsList);
 
         let isFound = false;
         for (let student of studentsList) {
